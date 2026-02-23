@@ -2,22 +2,6 @@
 @import "./theme.css";
 @import "tailwindcss";
 
-@font-face {
-  font-family: "Lilex";
-  src: url("/fonts/Lilex-wght.woff2") format("woff2");
-  font-weight: 100 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Lilex";
-  src: url("/fonts/Lilex-Italic-wght.woff2") format("woff2");
-  font-weight: 100 700;
-  font-style: italic;
-  font-display: swap;
-}
-
 :root {
   color-scheme: dark;
 }

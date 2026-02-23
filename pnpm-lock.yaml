@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@fontsource/lilex':
+        specifier: ^5.2.1
+        version: 5.2.1
       '@tailwindcss/vite':
         specifier: ^4.2.0
         version: 4.2.0(vite@6.4.1(@types/node@25.3.0)(jiti@2.6.1)(lightningcss@1.31.1)(yaml@2.8.2))
@@ -442,6 +445,9 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@fontsource/lilex@5.2.1':
+    resolution: {integrity: sha512-KnfU2zYPB8JWvxbB4SOn3dR3vivBGVPUGHvOIi176b8Uus4iOL2lbF6lrKf8BZlNSM/qeAxYmaMmqnhwZ/KMzQ==}
 
   '@img/colour@1.0.0':
     resolution: {integrity: sha512-A5P/LfWGFSl6nsckYtjw9da+19jB8hkJ6ACTGcDfEJ0aE+l2n2El7dsVM7UVHZQ9s2lmYMWlrS21YLy2IR1LUw==}
@@ -2809,6 +2815,8 @@ snapshots:
 
   '@esbuild/win32-x64@0.27.3':
     optional: true
+
+  '@fontsource/lilex@5.2.1': {}
 
   '@img/colour@1.0.0':
     optional: true
