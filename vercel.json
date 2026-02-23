@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.garrettladley.com"
+        }
+      ],
+      "destination": "https://garrettladley.com/$1",
+      "permanent": true
+    }
+  ]
+}

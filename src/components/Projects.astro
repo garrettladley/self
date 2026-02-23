@@ -1,0 +1,84 @@
+---
+type Project = {
+  name: string;
+  description: string;
+  href?: string;
+  private?: boolean;
+  tools: string[];
+};
+
+const projects: Project[] = [
+  {
+    name: "intern",
+    private: true,
+    description: "Sandboxed background agents running your infrastructure",
+    tools: ["Go"],
+  },
+  {
+    name: "thoop",
+    href: "https://github.com/garrettladley/thoop",
+    description: "TUI for your WHOOP",
+    tools: ["Go"],
+  },
+  {
+    name: "peli",
+    href: "https://github.com/garrettladley/peli",
+    description: "Beli-style restaurant ranking TUI",
+    tools: ["Go"],
+  },
+  {
+    name: "smerkle",
+    href: "https://github.com/garrettladley/smerkle",
+    description: "Exploring merkle trees",
+    tools: ["Go"],
+  },
+  {
+    name: "strumbra",
+    href: "https://github.com/garrettladley/strumbra",
+    description: "Umbra strings",
+    tools: ["Go"],
+  },
+  {
+    name: "repo_reaper",
+    href: "https://github.com/garrettladley/repo_reaper",
+    description: "Information retrieval CLI for code search",
+    tools: ["Rust"],
+  },
+];
+---
+
+<section class="space-y-0">
+  <p>PROJECTS:</p>
+  <ul class="space-y-1 text-foreground-muted">
+    {
+      projects.map((project) => (
+        <li>
+          {project.href ? (
+            <>
+              <a
+                href={project.href}
+                target="_blank"
+                rel="noreferrer"
+                title={project.href}
+                aria-label={`${project.name} (${project.href})`}
+                set:text={project.name}
+              />{" "}
+              · {project.description}
+            </>
+          ) : (
+            <>
+              <span>
+                {project.name}
+                {project.private && " (private)"}
+              </span>{" "}
+              · {project.description}
+            </>
+          )}
+          {project.tools.length > 0 && (
+            <span class="opacity-85"> · {project.tools.join(" · ")}</span>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</section>
