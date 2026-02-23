@@ -6,35 +6,90 @@ on:
     branches:
       - main
 
+env:
+  NODE_VERSION_FILE: .tool-versions
+  PNPM_VERSION_FILE: .tool-versions
+
 jobs:
-  quality:
+  setup:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
-
+    timeout-minutes: 5
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup mise
-        uses: jdx/mise-action@v2
+      - uses: pnpm/action-setup@v4
 
-      - name: Trust project config
-        run: mise trust --yes
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .tool-versions
+          cache: pnpm
 
-      - name: Install toolchain
-        run: mise install
+      - run: pnpm install --frozen-lockfile
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+  format:
+    needs: setup
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Check formatting
-        run: pnpm run format:check
+      - uses: pnpm/action-setup@v4
 
-      - name: Lint
-        run: pnpm run lint
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .tool-versions
+          cache: pnpm
 
-      - name: Typecheck
-        run: pnpm run typecheck
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run format:check
 
-      - name: Build
-        run: pnpm run build
+  lint:
+    needs: setup
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .tool-versions
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run lint
+
+  typecheck:
+    needs: setup
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .tool-versions
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run typecheck
+
+  build:
+    needs: [format, lint, typecheck]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .tool-versions
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
