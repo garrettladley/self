@@ -1,0 +1,17 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import FileAbduction from "../components/FileAbduction.astro";
+---
+
+<BaseLayout title="404" description="Page not found" noIndex>
+  <main
+    class="mx-auto min-h-dvh w-full max-w-page px-page-x py-page-y text-[clamp(0.95rem,2.2vw,1.08rem)] leading-[1.6]"
+  >
+    <div class="space-y-5">
+      <p>ERROR: 404</p>
+      <p class="text-foreground-muted">THIS ROUTE DOES NOT EXIST.</p>
+      <FileAbduction class="h-24 w-24 text-foreground-muted" />
+      <p>[ <a href="/">RETURN HOME</a> ]</p>
+    </div>
+  </main>
+</BaseLayout>

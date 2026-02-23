@@ -1,0 +1,31 @@
+{
+  "name": "garrettladley-com",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "typecheck": "astro check",
+    "lint": "oxlint .",
+    "format": "oxfmt --write . && prettier --write \"src/**/*.astro\"",
+    "format:check": "oxfmt --check . && prettier --check \"src/**/*.astro\"",
+    "vercel:bootstrap": "bash ./scripts/vercel-bootstrap.sh",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.2.0",
+    "astro": "^5.17.1",
+    "tailwindcss": "^4.2.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.6",
+    "@types/node": "^25.3.0",
+    "oxfmt": "^0.34.0",
+    "oxlint": "^1.49.0",
+    "prettier": "^3.8.1",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "^5.9.3"
+  }
+}
