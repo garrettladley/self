@@ -42,10 +42,11 @@ a {
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 0.18em;
+  transition: color 0.15s ease;
 }
 
 a:hover {
-  opacity: 0.86;
+  color: var(--color-accent);
 }
 
 @keyframes cursor {

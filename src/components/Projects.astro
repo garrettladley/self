@@ -9,6 +9,12 @@ type Project = {
 
 const projects: Project[] = [
   {
+    name: "intern",
+    private: true,
+    description: "Sandboxed background agents running your infrastructure",
+    tools: ["Go"],
+  },
+  {
     name: "thoop",
     href: "https://github.com/garrettladley/thoop",
     description: "TUI for your WHOOP",
@@ -17,7 +23,7 @@ const projects: Project[] = [
   {
     name: "peli",
     href: "https://github.com/garrettladley/peli",
-    description: "Beli-style restaurant ranking in your terminal",
+    description: "Beli-style restaurant ranking TUI",
     tools: ["Go"],
   },
   {
@@ -27,10 +33,16 @@ const projects: Project[] = [
     tools: ["Go"],
   },
   {
-    name: "intern",
-    private: true,
-    description: "Sandboxed background agents running your infrastructure",
+    name: "strumbra",
+    href: "https://github.com/garrettladley/strumbra",
+    description: "Umbra strings",
     tools: ["Go"],
+  },
+  {
+    name: "repo_reaper",
+    href: "https://github.com/garrettladley/repo_reaper",
+    description: "Information retrieval CLI for code search",
+    tools: ["Rust"],
   },
 ];
 ---
@@ -56,7 +68,8 @@ const projects: Project[] = [
           ) : (
             <>
               <span>
-                {project.name}{project.private && " (private)"}
+                {project.name}
+                {project.private && " (private)"}
               </span>{" "}
               · {project.description}
             </>
@@ -69,4 +82,3 @@ const projects: Project[] = [
     }
   </ul>
 </section>
-

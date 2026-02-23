@@ -8,6 +8,11 @@ const config = {
         background: "var(--color-bg)",
         foreground: "var(--color-text)",
         "foreground-muted": "var(--color-text-soft)",
+        accent: "var(--color-accent)",
+        border: "var(--color-border)",
+      },
+      borderColor: {
+        DEFAULT: "var(--color-border)",
       },
       fontFamily: {
         mono: ["var(--font-mono)"],
