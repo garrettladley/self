@@ -10,8 +10,8 @@
     "lint": "eslint . --cache",
     "lint:fix": "eslint . --fix --cache",
     "a11y": "axe $(ls src/pages/*.astro | sed 's|src/pages/index.astro|http://localhost:4321|;s|src/pages/\\(.*\\).astro|http://localhost:4321/\\1|') --exit",
-    "format": "oxfmt --write . && prettier --write \"src/**/*.astro\"",
-    "format:check": "oxfmt --check . && prettier --check \"src/**/*.astro\"",
+    "format": "oxfmt --check . && prettier --check \"src/**/*.astro\"",
+    "format:fix": "oxfmt --write . && prettier --write \"src/**/*.astro\"",
     "vercel:bootstrap": "bash ./scripts/vercel-bootstrap.sh",
     "preview": "astro preview",
     "astro": "astro"
