@@ -1,0 +1,112 @@
+---
+interface Props {
+  currentPath?: string;
+}
+
+const { currentPath = "" } = Astro.props;
+
+const navLinks = [
+  { href: "/projects", label: "Projects" },
+  { href: "/library", label: "Library" },
+];
+---
+
+<header
+  class="fixed top-0 left-0 right-0 z-20 flex h-[60px] items-center justify-between border-b border-border bg-background px-page-x font-mono text-[10px] uppercase tracking-[0.2em]"
+  transition:persist
+  transition:animate="none"
+>
+  <div class="flex items-center gap-x-4">
+    <a
+      href="/"
+      data-nav-home
+      class:list={[
+        "transition-colors duration-150 no-underline",
+        currentPath === "/"
+          ? "text-accent cursor-default"
+          : "text-foreground-muted hover:text-accent",
+      ]}
+    >
+      Garrett Ladley
+    </a>
+    <span class="text-border" role="separator">/</span>
+    <nav aria-label="Site navigation" class="flex items-center gap-x-3">
+      {
+        navLinks.map((link, i) => (
+          <>
+            {i > 0 && (
+              <span class="text-border" role="separator">
+                ·
+              </span>
+            )}
+            <a
+              href={link.href}
+              data-nav-link
+              class:list={[
+                "transition-colors duration-150 no-underline",
+                currentPath.startsWith(link.href)
+                  ? "text-accent hover:text-accent cursor-default"
+                  : "text-foreground-muted hover:text-accent",
+              ]}
+            >
+              {link.label}
+            </a>
+          </>
+        ))
+      }
+    </nav>
+  </div>
+  <div class="text-foreground-muted" id="clock">00:00:00</div>
+</header>
+
+<script is:inline data-astro-rerun>
+  (function () {
+    var header = document.querySelector("[data-nav-home]");
+    if (!header) return;
+
+    // Guard against duplicate clock intervals from persist + rerun
+    if (!window.__clockInterval) {
+      function updateClock() {
+        var now = new Date();
+        var h = String(now.getHours()).padStart(2, "0");
+        var m = String(now.getMinutes()).padStart(2, "0");
+        var s = String(now.getSeconds()).padStart(2, "0");
+        var el = document.getElementById("clock");
+        if (el) el.textContent = h + ":" + m + ":" + s;
+      }
+      window.__clockInterval = setInterval(updateClock, 1000);
+      updateClock();
+    }
+
+    var path = window.location.pathname;
+    var activeClass =
+      "transition-colors duration-150 no-underline text-accent hover:text-accent cursor-default";
+    var inactiveClass =
+      "transition-colors duration-150 no-underline text-foreground-muted hover:text-accent";
+
+    var home = document.querySelector("[data-nav-home]");
+    if (home) {
+      home.className = path === "/" ? activeClass : inactiveClass;
+    }
+    document.querySelectorAll("[data-nav-link]").forEach(function (el) {
+      el.className = path.startsWith(el.getAttribute("href"))
+        ? activeClass
+        : inactiveClass;
+    });
+
+    // Single delegated listener on the header to block clicks on active links
+    var headerEl = document.querySelector("header");
+    if (headerEl && !headerEl.__navGuard) {
+      headerEl.__navGuard = true;
+      headerEl.addEventListener("click", function (e) {
+        var link = e.target.closest("[data-nav-home], [data-nav-link]");
+        if (!link) return;
+        var cur = window.location.pathname;
+        var href = link.getAttribute("href");
+        if (href === "/" ? cur === "/" : cur.startsWith(href)) {
+          e.preventDefault();
+        }
+      });
+    }
+  })();
+</script>

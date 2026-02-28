@@ -30,11 +30,23 @@
   </div>
 </section>
 
-<script is:inline>
+<script is:inline data-astro-rerun>
   (function () {
+    // Clean up previous instance if navigating back
+    if (window.__halftoneCleanup) {
+      window.__halftoneCleanup();
+      window.__halftoneCleanup = null;
+    }
+    if (window.__halftoneLoseGL) {
+      window.__halftoneLoseGL();
+      window.__halftoneLoseGL = null;
+    }
+
     var canvas = document.getElementById("glcanvas");
     var viewport = document.getElementById("viewport");
     var gridOverlay = document.getElementById("grid-overlay");
+    if (!canvas || !viewport) return;
+
     var gl = canvas.getContext("webgl", {
       alpha: false,
       antialias: false,
@@ -189,40 +201,59 @@
       gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
     }
 
-    window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
-
-    viewport.addEventListener("mousemove", function (e) {
-      var rect = canvas.getBoundingClientRect();
-      targetMouseX = (e.clientX - rect.left) * dpr;
-      targetMouseY = (rect.height - (e.clientY - rect.top)) * dpr;
-    });
-
-    viewport.addEventListener(
-      "touchmove",
-      function (e) {
-        e.preventDefault();
-        var rect = canvas.getBoundingClientRect();
-        targetMouseX = (e.touches[0].clientX - rect.left) * dpr;
-        targetMouseY = (rect.height - (e.touches[0].clientY - rect.top)) * dpr;
-      },
-      { passive: false },
-    );
 
     targetMouseX = canvas.width / 2;
     targetMouseY = canvas.height / 2;
     mouseX = targetMouseX;
     mouseY = targetMouseY;
 
+    function onResize() {
+      resizeCanvas();
+    }
+    window.addEventListener("resize", onResize);
+
+    function onMouseMove(e) {
+      var rect = canvas.getBoundingClientRect();
+      targetMouseX = (e.clientX - rect.left) * dpr;
+      targetMouseY = (rect.height - (e.clientY - rect.top)) * dpr;
+    }
+
+    function onTouchMove(e) {
+      e.preventDefault();
+      var rect = canvas.getBoundingClientRect();
+      targetMouseX = (e.touches[0].clientX - rect.left) * dpr;
+      targetMouseY = (rect.height - (e.touches[0].clientY - rect.top)) * dpr;
+    }
+
+    viewport.addEventListener("mousemove", onMouseMove);
+    viewport.addEventListener("touchmove", onTouchMove, { passive: false });
+
+    // Shared teardown helpers
+    function stopListeners() {
+      window.removeEventListener("resize", onResize);
+      viewport.removeEventListener("mousemove", onMouseMove);
+      viewport.removeEventListener("touchmove", onTouchMove);
+    }
+
+    function loseGL() {
+      gl.getExtension("WEBGL_lose_context")?.loseContext();
+    }
+
     if (prefersReducedMotion) {
       gl.uniform1f(timeLocation, 0);
       gl.uniform2f(mouseLocation, mouseX, mouseY);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      window.__halftoneCleanup = function () {
+        stopListeners();
+      };
+      window.__halftoneLoseGL = loseGL;
       return;
     }
 
     var frames = 0;
     var lastFpsTime = 0;
+    var rafId;
 
     function render(time) {
       time *= 0.001;
@@ -238,9 +269,40 @@
       gl.uniform1f(timeLocation, time);
       gl.uniform2f(mouseLocation, mouseX, mouseY);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-      requestAnimationFrame(render);
+      rafId = requestAnimationFrame(render);
     }
 
-    requestAnimationFrame(render);
+    rafId = requestAnimationFrame(render);
+
+    // Freeze last frame (stop rAF + listeners) — keeps canvas painted for snapshot
+    window.__halftoneCleanup = function () {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = null;
+      stopListeners();
+    };
+    // Destroy GL context after the DOM swap (canvas is gone, snapshot already taken)
+    window.__halftoneLoseGL = loseGL;
+
+    document.addEventListener(
+      "astro:before-preparation",
+      function () {
+        if (window.__halftoneCleanup) {
+          window.__halftoneCleanup();
+          window.__halftoneCleanup = null;
+        }
+      },
+      { once: true },
+    );
+
+    document.addEventListener(
+      "astro:after-swap",
+      function () {
+        if (window.__halftoneLoseGL) {
+          window.__halftoneLoseGL();
+          window.__halftoneLoseGL = null;
+        }
+      },
+      { once: true },
+    );
   })();
 </script>

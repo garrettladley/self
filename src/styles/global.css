@@ -37,13 +37,17 @@ body.fonts-loaded {
 
 a {
   color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 0.18em;
+  text-decoration: none;
   transition: color 0.15s ease;
 }
 
 a:hover {
   color: var(--color-accent);
+}
+
+main a:not([data-nav-link]) {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
 @keyframes cursor {
