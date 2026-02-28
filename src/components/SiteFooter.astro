@@ -1,6 +1,10 @@
 ---
 const now = new Date();
-const lastBuild = `${String(now.getDate()).padStart(2, "0")}/${String(now.getMonth() + 1).padStart(2, "0")}/${now.getFullYear()}`;
+const dd = String(now.getDate()).padStart(2, "0");
+const mm = String(now.getMonth() + 1).padStart(2, "0");
+const yyyy = now.getFullYear();
+const dmy = `${dd}/${mm}/${yyyy}`;
+const mdy = `${mm}/${dd}/${yyyy}`;
 ---
 
 <footer
@@ -39,5 +43,46 @@ const lastBuild = `${String(now.getDate()).padStart(2, "0")}/${String(now.getMon
       LinkedIn
     </a>
   </nav>
-  <span>LAST_BUILD: {lastBuild}</span>
+  <span
+    >LAST BUILD: <span
+      id="last-build"
+      class="cursor-pointer select-none transition-colors duration-150 hover:text-accent"
+      title="Click to toggle format"
+      data-dmy={dmy}
+      data-mdy={mdy}>{dmy}</span
+    ></span
+  >
 </footer>
+
+<script is:inline data-astro-rerun>
+  (function () {
+    const el = document.getElementById("last-build");
+    if (!el || el.__buildEvents) return;
+    el.__buildEvents = true;
+
+    if (window.__buildUseMDY === undefined) window.__buildUseMDY = false;
+
+    function current() {
+      return window.__buildUseMDY ? el.dataset.mdy : el.dataset.dmy;
+    }
+    function alt() {
+      return window.__buildUseMDY ? el.dataset.dmy : el.dataset.mdy;
+    }
+    function render() {
+      el.textContent = current();
+    }
+
+    render();
+
+    el.addEventListener("mouseenter", function () {
+      el.textContent = alt();
+    });
+    el.addEventListener("mouseleave", function () {
+      render();
+    });
+    el.addEventListener("click", function () {
+      window.__buildUseMDY = !window.__buildUseMDY;
+      render();
+    });
+  })();
+</script>

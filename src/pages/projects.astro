@@ -10,6 +10,7 @@ import { projects } from "../data/projects";
   <main
     class="mx-auto w-full max-w-page px-page-x pt-[calc(60px+var(--page-padding-block))] pb-[calc(60px+var(--page-padding-block))] flex-1 flex flex-col justify-center"
   >
+    <h1 class="sr-only">Projects</h1>
     <div
       class="flex flex-col w-full font-mono text-[15px] tracking-[0.04em] uppercase gap-1"
     >
@@ -31,15 +32,18 @@ import { projects } from "../data/projects";
                   project.name
                 )}
                 {project.private && (
-                  <span class="opacity-40 text-[13px]"> (private)</span>
+                  <span class="text-foreground-dim text-[13px]">
+                    {" "}
+                    (private)
+                  </span>
                 )}
               </span>
-              <span class="opacity-30">&gt;</span>
+              <span class="text-foreground-dim">&gt;</span>
             </div>
             <div class="overflow-hidden text-ellipsis whitespace-nowrap">
               {project.description}
               {project.tools.length > 0 && (
-                <span class="opacity-50 text-[13px]">
+                <span class="text-foreground-dim text-[13px]">
                   {" "}
                   · {project.tools.join(" · ")}
                 </span>

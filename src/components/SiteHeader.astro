@@ -56,35 +56,69 @@ const navLinks = [
       }
     </nav>
   </div>
-  <div class="text-foreground-muted" id="clock">00:00:00</div>
+  <div
+    class="text-foreground-muted cursor-pointer select-none"
+    id="clock"
+    title="Click to toggle format"
+  >
+    00:00:00
+  </div>
 </header>
 
 <script is:inline data-astro-rerun>
   (function () {
-    var header = document.querySelector("[data-nav-home]");
+    const header = document.querySelector("[data-nav-home]");
     if (!header) return;
 
     // Guard against duplicate clock intervals from persist + rerun
     if (!window.__clockInterval) {
-      function updateClock() {
-        var now = new Date();
-        var h = String(now.getHours()).padStart(2, "0");
-        var m = String(now.getMinutes()).padStart(2, "0");
-        var s = String(now.getSeconds()).padStart(2, "0");
-        var el = document.getElementById("clock");
-        if (el) el.textContent = h + ":" + m + ":" + s;
+      // Default to 12h; persisted across navigations via window
+      if (window.__clockUse24h === undefined) window.__clockUse24h = false;
+
+      function formatTime(now, use24h) {
+        let h = now.getHours();
+        const m = String(now.getMinutes()).padStart(2, "0");
+        const s = String(now.getSeconds()).padStart(2, "0");
+        if (use24h) return String(h).padStart(2, "0") + ":" + m + ":" + s;
+        h = h % 12 || 12;
+        return String(h).padStart(2, "0") + ":" + m + ":" + s;
       }
+
+      function updateClock() {
+        const now = new Date();
+        const el = document.getElementById("clock");
+        if (!el) return;
+        el.textContent = formatTime(now, window.__clockUse24h);
+        el.dataset.alt = formatTime(now, !window.__clockUse24h);
+      }
+
       window.__clockInterval = setInterval(updateClock, 1000);
       updateClock();
+
+      // Hover: show the alternate format; unhover: restore
+      const clockEl = document.getElementById("clock");
+      if (clockEl && !clockEl.__clockEvents) {
+        clockEl.__clockEvents = true;
+        clockEl.addEventListener("mouseenter", function () {
+          clockEl.textContent = clockEl.dataset.alt || clockEl.textContent;
+        });
+        clockEl.addEventListener("mouseleave", function () {
+          updateClock();
+        });
+        clockEl.addEventListener("click", function () {
+          window.__clockUse24h = !window.__clockUse24h;
+          updateClock();
+        });
+      }
     }
 
-    var path = window.location.pathname;
-    var activeClass =
+    const path = window.location.pathname;
+    const activeClass =
       "transition-colors duration-150 no-underline text-accent hover:text-accent cursor-default";
-    var inactiveClass =
+    const inactiveClass =
       "transition-colors duration-150 no-underline text-foreground-muted hover:text-accent";
 
-    var home = document.querySelector("[data-nav-home]");
+    const home = document.querySelector("[data-nav-home]");
     if (home) {
       home.className = path === "/" ? activeClass : inactiveClass;
     }
@@ -95,14 +129,14 @@ const navLinks = [
     });
 
     // Single delegated listener on the header to block clicks on active links
-    var headerEl = document.querySelector("header");
+    const headerEl = document.querySelector("header");
     if (headerEl && !headerEl.__navGuard) {
       headerEl.__navGuard = true;
       headerEl.addEventListener("click", function (e) {
-        var link = e.target.closest("[data-nav-home], [data-nav-link]");
+        const link = e.target.closest("[data-nav-home], [data-nav-link]");
         if (!link) return;
-        var cur = window.location.pathname;
-        var href = link.getAttribute("href");
+        const cur = window.location.pathname;
+        const href = link.getAttribute("href");
         if (href === "/" ? cur === "/" : cur.startsWith(href)) {
           e.preventDefault();
         }

@@ -54,6 +54,15 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+
+      - name: Restore ESLint cache
+        uses: actions/cache@v4
+        with:
+          path: .eslintcache
+          key: eslint-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', 'eslint.config.js') }}-${{ github.sha }}
+          restore-keys: |
+            eslint-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', 'eslint.config.js') }}-
+
       - run: pnpm run lint
 
   typecheck:
@@ -89,6 +98,18 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm run build
+
+      - name: Cache Chrome
+        id: chrome-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.browser-driver-manager
+          key: chrome-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install Chrome
+        if: steps.chrome-cache.outputs.cache-hit != 'true'
+        run: pnpm browser-driver-manager install chrome
+
       - name: a11y
         run: |
           pnpm astro preview &

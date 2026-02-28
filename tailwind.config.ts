@@ -8,6 +8,7 @@ const config = {
         background: "var(--color-bg)",
         foreground: "var(--color-text)",
         "foreground-muted": "var(--color-text-soft)",
+        "foreground-dim": "var(--color-text-dim)",
         accent: "var(--color-accent)",
         border: "var(--color-border)",
       },
