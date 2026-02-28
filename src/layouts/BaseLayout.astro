@@ -49,13 +49,17 @@ const canonical = new URL(Astro.url.pathname, "https://garrettladley.com");
       <slot />
     </div>
     <script is:inline>
-      if (document.fonts) {
-        document.fonts.ready.then(function () {
+      (function () {
+        var show = function () {
           document.body.classList.add("fonts-loaded");
-        });
-      } else {
-        document.body.classList.add("fonts-loaded");
-      }
+        };
+        if (document.fonts) {
+          document.fonts.ready.then(show);
+        } else {
+          show();
+        }
+        setTimeout(show, 500);
+      })();
     </script>
     <SpeedInsights />
     <Analytics />
