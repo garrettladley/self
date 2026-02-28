@@ -37,15 +37,6 @@ main a:not([data-nav-link]) {
   text-underline-offset: 0.18em;
 }
 
-::view-transition-old(site-header),
-::view-transition-new(site-header),
-::view-transition-old(site-footer),
-::view-transition-new(site-footer) {
-  animation: none !important;
-  opacity: 1 !important;
-  mix-blend-mode: normal;
-}
-
 @keyframes cursor {
   0%,
   49% {

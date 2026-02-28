@@ -280,7 +280,6 @@
       rafId = null;
       stopListeners();
     };
-    // Destroy GL context after the DOM swap (canvas is gone, snapshot already taken)
     window.__halftoneLoseGL = loseGL;
 
     document.addEventListener(
@@ -290,17 +289,27 @@
           window.__halftoneCleanup();
           window.__halftoneCleanup = null;
         }
-      },
-      { once: true },
-    );
-
-    document.addEventListener(
-      "astro:after-swap",
-      function () {
-        if (window.__halftoneLoseGL) {
-          window.__halftoneLoseGL();
-          window.__halftoneLoseGL = null;
-        }
+        // Release the GL context after the next page has loaded to avoid
+        // compositor churn during the in-flight transition.
+        document.addEventListener(
+          "astro:page-load",
+          function () {
+            if (!window.__halftoneLoseGL) return;
+            const release = window.__halftoneLoseGL;
+            window.__halftoneLoseGL = null;
+            if ("requestIdleCallback" in window) {
+              window.requestIdleCallback(
+                function () {
+                  release();
+                },
+                { timeout: 1000 },
+              );
+            } else {
+              setTimeout(release, 0);
+            }
+          },
+          { once: true },
+        );
       },
       { once: true },
     );
