@@ -1,0 +1,15 @@
+---
+interface Props {
+  char?: string;
+}
+
+const { char = "/" } = Astro.props;
+const repeated = char.repeat(300);
+---
+
+<div
+  class="overflow-hidden whitespace-nowrap font-mono text-[10px] leading-none tracking-[0] text-border select-none my-6 px-page-x"
+  aria-hidden="true"
+>
+  {repeated}
+</div>

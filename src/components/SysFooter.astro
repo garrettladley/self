@@ -1,0 +1,41 @@
+---
+const now = new Date();
+const lastBuild = `${String(now.getDate()).padStart(2, "0")}/${String(now.getMonth() + 1).padStart(2, "0")}/${now.getFullYear()}`;
+---
+
+<footer
+  class="flex flex-wrap items-center justify-between gap-x-6 gap-y-1 border-t border-border px-page-x py-3 font-mono text-[10px] uppercase tracking-[0.15em] text-foreground-muted shrink-0"
+>
+  <nav aria-label="Social links" class="flex items-center gap-x-3">
+    <a
+      href="https://github.com/garrettladley"
+      target="_blank"
+      rel="noreferrer"
+      aria-label="GitHub (github.com/garrettladley)"
+      class="transition-colors duration-150 hover:text-accent"
+    >
+      GitHub
+    </a>
+    <span aria-hidden="true">|</span>
+    <a
+      href="https://x.com/GarrettLadley"
+      target="_blank"
+      rel="noreferrer"
+      aria-label="X (x.com/GarrettLadley)"
+      class="transition-colors duration-150 hover:text-accent"
+    >
+      X
+    </a>
+    <span aria-hidden="true">|</span>
+    <a
+      href="https://linkedin.com/in/garrett-ladley/"
+      target="_blank"
+      rel="noreferrer"
+      aria-label="LinkedIn (linkedin.com/in/garrett-ladley)"
+      class="transition-colors duration-150 hover:text-accent"
+    >
+      LinkedIn
+    </a>
+  </nav>
+  <span>LAST_BUILD: {lastBuild}</span>
+</footer>
