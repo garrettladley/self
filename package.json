@@ -49,6 +49,7 @@
       "lodash": ">=4.17.23"
     },
     "onlyBuiltDependencies": [
+      "@poupe/eslint-plugin-tailwindcss",
       "chromedriver"
     ]
   }
