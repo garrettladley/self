@@ -20,6 +20,19 @@ body {
 body {
   margin: 0;
   letter-spacing: 0.01em;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+body.fonts-loaded {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    opacity: 1;
+    transition: none;
+  }
 }
 
 a {
