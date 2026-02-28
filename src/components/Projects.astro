@@ -47,38 +47,47 @@ const projects: Project[] = [
 ];
 ---
 
-<section class="space-y-0">
-  <p>PROJECTS:</p>
-  <ul class="space-y-1 text-foreground-muted">
+<section class="px-page-x py-8">
+  <div
+    class="text-center font-mono text-[11px] uppercase tracking-[0.1em] text-foreground-muted mb-6"
+  >
+    ACTIVE PROJECTS
+  </div>
+
+  <div
+    class="flex flex-col w-full font-mono text-[11px] tracking-[0.05em] uppercase"
+  >
     {
       projects.map((project) => (
-        <li>
-          {project.href ? (
-            <>
+        <div class="grid grid-cols-[clamp(120px,20vw,200px)_1fr] gap-2 border-t border-border py-2 transition-all duration-200 hover:text-accent hover:pl-2">
+          <div class="flex justify-between pr-4 text-foreground-muted">
+            <span>
+              {project.name}
+              {project.private && " (pvt)"}
+            </span>
+            <span>&gt;</span>
+          </div>
+          <div class="overflow-hidden text-ellipsis whitespace-nowrap">
+            {project.href ? (
               <a
                 href={project.href}
                 target="_blank"
                 rel="noreferrer"
+                class="no-underline"
                 title={project.href}
-                aria-label={`${project.name} (${project.href})`}
-                set:text={project.name}
-              />{" "}
-              · {project.description}
-            </>
-          ) : (
-            <>
-              <span>
-                {project.name}
-                {project.private && " (private)"}
-              </span>{" "}
-              · {project.description}
-            </>
-          )}
-          {project.tools.length > 0 && (
-            <span class="opacity-85"> · {project.tools.join(" · ")}</span>
-          )}
-        </li>
+              >
+                {project.description}
+              </a>
+            ) : (
+              project.description
+            )}
+            {project.tools.length > 0 && (
+              <span class="opacity-60"> · {project.tools.join(" · ")}</span>
+            )}
+          </div>
+        </div>
       ))
     }
-  </ul>
+    <div class="border-t border-border"></div>
+  </div>
 </section>

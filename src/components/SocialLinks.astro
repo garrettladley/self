@@ -1,33 +1,48 @@
-<nav aria-label="Social links" class="text-foreground-muted">
-  <p class="flex flex-wrap items-center gap-x-3">
-    <a
-      href="https://github.com/garrettladley"
-      target="_blank"
-      rel="noreferrer"
-      title="github.com/garrettladley"
-      aria-label="GitHub (github.com/garrettladley)"
-    >
-      GitHub
-    </a>
-    <span aria-hidden="true">|</span>
-    <a
-      href="https://x.com/GarrettLadley"
-      target="_blank"
-      rel="noreferrer"
-      title="x.com/GarrettLadley"
-      aria-label="X (x.com/GarrettLadley)"
-    >
-      X
-    </a>
-    <span aria-hidden="true">|</span>
-    <a
-      href="https://linkedin.com/in/garrett-ladley/"
-      target="_blank"
-      rel="noreferrer"
-      title="linkedin.com/in/garrett-ladley"
-      aria-label="LinkedIn (linkedin.com/in/garrett-ladley)"
-    >
-      LinkedIn
-    </a>
-  </p>
+---
+const links = [
+  {
+    label: "GITHUB",
+    href: "https://github.com/garrettladley",
+    display: "github.com/garrettladley",
+  },
+  {
+    label: "X",
+    href: "https://x.com/GarrettLadley",
+    display: "x.com/GarrettLadley",
+  },
+  {
+    label: "LINKEDIN",
+    href: "https://linkedin.com/in/garrett-ladley/",
+    display: "linkedin.com/in/garrett-ladley",
+  },
+];
+---
+
+<nav aria-label="Social links" class="px-page-x py-8">
+  <div
+    class="flex flex-col w-full font-mono text-[11px] tracking-[0.05em] uppercase"
+  >
+    {
+      links.map((link) => (
+        <div class="grid grid-cols-[clamp(120px,20vw,200px)_1fr] gap-2 border-t border-border py-2 transition-all duration-200 hover:text-accent hover:pl-2">
+          <div class="flex justify-between pr-4 text-foreground-muted">
+            <span>{link.label}</span>
+            <span>&gt;</span>
+          </div>
+          <div class="overflow-hidden text-ellipsis whitespace-nowrap">
+            <a
+              href={link.href}
+              target="_blank"
+              rel="noreferrer"
+              class="no-underline"
+              title={link.href}
+            >
+              {link.display}
+            </a>
+          </div>
+        </div>
+      ))
+    }
+    <div class="border-t border-border"></div>
+  </div>
 </nav>
