@@ -89,3 +89,8 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm run build
+      - name: a11y
+        run: |
+          pnpm astro preview &
+          npx wait-on http://localhost:4321 --timeout 10000
+          pnpm run a11y
