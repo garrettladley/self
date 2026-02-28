@@ -37,10 +37,6 @@
       window.__halftoneCleanup();
       window.__halftoneCleanup = null;
     }
-    if (window.__halftoneLoseGL) {
-      window.__halftoneLoseGL();
-      window.__halftoneLoseGL = null;
-    }
 
     const canvas = document.getElementById("glcanvas");
     const viewport = document.getElementById("viewport");
@@ -236,10 +232,6 @@
       viewport.removeEventListener("touchmove", onTouchMove);
     }
 
-    function loseGL() {
-      gl.getExtension("WEBGL_lose_context")?.loseContext();
-    }
-
     if (prefersReducedMotion) {
       gl.uniform1f(timeLocation, 0);
       gl.uniform2f(mouseLocation, mouseX, mouseY);
@@ -247,7 +239,6 @@
       window.__halftoneCleanup = function () {
         stopListeners();
       };
-      window.__halftoneLoseGL = loseGL;
       return;
     }
 
@@ -280,8 +271,6 @@
       rafId = null;
       stopListeners();
     };
-    // Destroy GL context after the DOM swap (canvas is gone, snapshot already taken)
-    window.__halftoneLoseGL = loseGL;
 
     document.addEventListener(
       "astro:before-preparation",
@@ -289,17 +278,6 @@
         if (window.__halftoneCleanup) {
           window.__halftoneCleanup();
           window.__halftoneCleanup = null;
-        }
-      },
-      { once: true },
-    );
-
-    document.addEventListener(
-      "astro:after-swap",
-      function () {
-        if (window.__halftoneLoseGL) {
-          window.__halftoneLoseGL();
-          window.__halftoneLoseGL = null;
         }
       },
       { once: true },

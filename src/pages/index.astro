@@ -5,7 +5,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout>
-  <main class="flex flex-col h-dvh pt-[60px] pb-[40px]">
+  <main
+    class="flex flex-col h-dvh pt-[60px] pb-[40px]"
+    transition:animate="none"
+  >
     <HalftoneCanvas />
     <InfoPanels />
   </main>
