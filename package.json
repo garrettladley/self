@@ -9,7 +9,7 @@
     "typecheck": "astro check",
     "lint": "eslint . --cache",
     "lint:fix": "eslint . --fix --cache",
-    "a11y": "axe http://localhost:4321 http://localhost:4321/projects http://localhost:4321/library http://localhost:4321/404 --exit",
+    "a11y": "axe $(ls src/pages/*.astro | sed 's|src/pages/index.astro|http://localhost:4321|;s|src/pages/\\(.*\\).astro|http://localhost:4321/\\1|') --exit",
     "format": "oxfmt --write . && prettier --write \"src/**/*.astro\"",
     "format:check": "oxfmt --check . && prettier --check \"src/**/*.astro\"",
     "vercel:bootstrap": "bash ./scripts/vercel-bootstrap.sh",
@@ -17,6 +17,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.0",
     "@astrojs/vercel": "^9.0.4",
     "@tailwindcss/vite": "^4.2.0",
     "@vercel/analytics": "^1.6.1",
