@@ -1,0 +1,111 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { library } from "../data/library";
+---
+
+<BaseLayout
+  title="Library — Garrett Ladley"
+  description="Books read by Garrett Ladley, grouped by year."
+>
+  <main
+    class="mx-auto w-full max-w-page px-page-x pt-[calc(60px+var(--page-padding-block))] pb-[calc(60px+var(--page-padding-block))] flex-1 flex flex-col"
+  >
+    <div
+      class="flex items-center justify-between font-mono text-[13px] tracking-[0.04em] uppercase text-foreground-muted mb-6"
+    >
+      <span class="opacity-50"
+        >{library.reduce((n, yg) => n + yg.books.length, 0)} books</span
+      >
+      <button
+        id="sort-toggle"
+        class="opacity-50 transition-opacity duration-150 hover:opacity-100 hover:text-accent cursor-pointer"
+      >
+        newest first ↓
+      </button>
+    </div>
+
+    <div
+      id="book-list"
+      class="flex flex-col font-mono text-[15px] tracking-[0.04em] uppercase"
+    >
+      {
+        library.map((yearGroup, yi) => (
+          <div class="year-group" data-year={yearGroup.year}>
+            <div
+              class:list={[
+                "grid grid-cols-[clamp(60px,12vw,100px)_1fr] gap-6 py-2 year-header",
+                yi > 0 && "mt-5 pt-5 border-t border-white/[0.06]",
+              ]}
+            >
+              <div class="text-accent/70 text-[17px] font-medium">
+                {yearGroup.year}
+              </div>
+              <div class="text-foreground-muted">
+                {yearGroup.books[0].title}
+              </div>
+            </div>
+            {yearGroup.books.slice(1).map((book) => (
+              <div class="grid grid-cols-[clamp(60px,12vw,100px)_1fr] gap-6 py-2 book-row">
+                <div />
+                <div class="text-foreground-muted">{book.title}</div>
+              </div>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </main>
+</BaseLayout>
+
+<script is:inline data-astro-rerun>
+  (function () {
+    var btn = document.getElementById("sort-toggle");
+    var list = document.getElementById("book-list");
+    if (!btn || !list) return;
+
+    var isDesc = true;
+
+    btn.addEventListener("click", function () {
+      isDesc = !isDesc;
+      btn.textContent = isDesc ? "newest first \u2193" : "oldest first \u2191";
+
+      // Reverse year group order
+      var groups = Array.from(list.querySelectorAll(".year-group"));
+      groups.reverse().forEach(function (g) {
+        list.appendChild(g);
+      });
+
+      // Reverse book order within each group
+      groups.forEach(function (group) {
+        var header = group.querySelector(".year-header");
+        var rows = Array.from(group.querySelectorAll(".book-row"));
+
+        // Collect all titles (header + rows), reverse, reassign
+        var headerTitle = header.querySelector(":scope > div:last-child");
+        var titles = [headerTitle.textContent.trim()];
+        rows.forEach(function (r) {
+          titles.push(
+            r.querySelector(":scope > div:last-child").textContent.trim(),
+          );
+        });
+        titles.reverse();
+
+        headerTitle.textContent = titles[0];
+        rows.forEach(function (r, i) {
+          r.querySelector(":scope > div:last-child").textContent =
+            titles[i + 1];
+        });
+      });
+
+      // Fix separators
+      list.querySelectorAll(".year-group").forEach(function (g, i) {
+        var h = g.querySelector(".year-header");
+        if (i === 0) {
+          h.classList.remove("mt-5", "pt-5", "border-t", "border-white/[0.06]");
+        } else {
+          h.classList.add("mt-5", "pt-5", "border-t", "border-white/[0.06]");
+        }
+      });
+    });
+  })();
+</script>

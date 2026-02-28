@@ -4,7 +4,9 @@ const lastBuild = `${String(now.getDate()).padStart(2, "0")}/${String(now.getMon
 ---
 
 <footer
-  class="flex flex-wrap items-center justify-between gap-x-6 gap-y-1 border-t border-border px-page-x py-3 font-mono text-[10px] uppercase tracking-[0.15em] text-foreground-muted shrink-0"
+  class="fixed bottom-0 left-0 right-0 z-20 flex flex-wrap items-center justify-between gap-x-6 gap-y-1 border-t border-border bg-background px-page-x py-3 font-mono text-[10px] uppercase tracking-[0.15em] text-foreground-muted shrink-0"
+  transition:persist
+  transition:animate="none"
 >
   <nav aria-label="Social links" class="flex items-center gap-x-3">
     <a
@@ -12,7 +14,7 @@ const lastBuild = `${String(now.getDate()).padStart(2, "0")}/${String(now.getMon
       target="_blank"
       rel="noreferrer"
       aria-label="GitHub (github.com/garrettladley)"
-      class="transition-colors duration-150 hover:text-accent"
+      class="no-underline transition-colors duration-150 hover:text-accent"
     >
       GitHub
     </a>
@@ -22,7 +24,7 @@ const lastBuild = `${String(now.getDate()).padStart(2, "0")}/${String(now.getMon
       target="_blank"
       rel="noreferrer"
       aria-label="X (x.com/GarrettLadley)"
-      class="transition-colors duration-150 hover:text-accent"
+      class="no-underline transition-colors duration-150 hover:text-accent"
     >
       X
     </a>
@@ -32,7 +34,7 @@ const lastBuild = `${String(now.getDate()).padStart(2, "0")}/${String(now.getMon
       target="_blank"
       rel="noreferrer"
       aria-label="LinkedIn (linkedin.com/in/garrett-ladley)"
-      class="transition-colors duration-150 hover:text-accent"
+      class="no-underline transition-colors duration-150 hover:text-accent"
     >
       LinkedIn
     </a>
