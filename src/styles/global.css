@@ -42,6 +42,7 @@ main a:not([data-nav-link]) {
 ::view-transition-old(site-footer),
 ::view-transition-new(site-footer) {
   animation: none !important;
+  opacity: 1 !important;
   mix-blend-mode: normal;
 }
 
