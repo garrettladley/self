@@ -1,4 +1,0 @@
-{
-  "$schema": "https://oxc-project.github.io/oxlint/schema.json",
-  "plugins": ["jsx-a11y"]
-}

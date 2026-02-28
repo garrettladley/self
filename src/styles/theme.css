@@ -6,13 +6,45 @@
   src: url("/fonts/lilex-latin-400-normal.woff2") format("woff2");
 }
 
+@property --color-bg {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #2a334f;
+}
+@property --color-text {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #ffffff;
+}
+@property --color-text-soft {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #dfe0e4;
+}
+@property --color-text-dim {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #a9adb8;
+}
+@property --color-accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #79c0ff;
+}
+@property --color-border {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #3f4760;
+}
+
 :root {
   --color-bg: #2a334f;
   --color-text: #ffffff;
-  --color-text-soft: rgba(255, 255, 255, 0.78);
+  --color-text-soft: #dfe0e4;
+  --color-text-dim: #a9adb8;
 
   --color-accent: #79c0ff;
-  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border: #3f4760;
 
   --font-mono:
     "Lilex", "ZedMonoExtended", "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono",

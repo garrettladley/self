@@ -54,19 +54,6 @@ const canonical = new URL(Astro.url.pathname, "https://garrettladley.com");
       <slot />
       <SiteFooter />
     </div>
-    <script is:inline data-astro-rerun>
-      (function () {
-        var show = function () {
-          document.body.classList.add("fonts-loaded");
-        };
-        if (document.fonts) {
-          document.fonts.ready.then(show);
-        } else {
-          show();
-        }
-        setTimeout(show, 500);
-      })();
-    </script>
     <SpeedInsights />
     <Analytics />
   </body>

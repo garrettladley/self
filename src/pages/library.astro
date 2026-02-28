@@ -10,15 +10,16 @@ import { library } from "../data/library";
   <main
     class="mx-auto w-full max-w-page px-page-x pt-[calc(60px+var(--page-padding-block))] pb-[calc(60px+var(--page-padding-block))] flex-1 flex flex-col"
   >
+    <h1 class="sr-only">Library</h1>
     <div
       class="flex items-center justify-between font-mono text-[13px] tracking-[0.04em] uppercase text-foreground-muted mb-6"
     >
-      <span class="opacity-50"
+      <span class="text-foreground-dim"
         >{library.reduce((n, yg) => n + yg.books.length, 0)} books</span
       >
       <button
         id="sort-toggle"
-        class="opacity-50 transition-opacity duration-150 hover:opacity-100 hover:text-accent cursor-pointer"
+        class="text-foreground-dim transition-opacity duration-150 hover:opacity-100 hover:text-accent cursor-pointer"
       >
         newest first ↓
       </button>
@@ -37,7 +38,7 @@ import { library } from "../data/library";
                 yi > 0 && "mt-5 pt-5 border-t border-white/[0.06]",
               ]}
             >
-              <div class="text-accent/70 text-[17px] font-medium">
+              <div class="text-accent text-[17px] font-medium">
                 {yearGroup.year}
               </div>
               <div class="text-foreground-muted">
@@ -59,30 +60,30 @@ import { library } from "../data/library";
 
 <script is:inline data-astro-rerun>
   (function () {
-    var btn = document.getElementById("sort-toggle");
-    var list = document.getElementById("book-list");
+    const btn = document.getElementById("sort-toggle");
+    const list = document.getElementById("book-list");
     if (!btn || !list) return;
 
-    var isDesc = true;
+    let isDesc = true;
 
     btn.addEventListener("click", function () {
       isDesc = !isDesc;
       btn.textContent = isDesc ? "newest first \u2193" : "oldest first \u2191";
 
       // Reverse year group order
-      var groups = Array.from(list.querySelectorAll(".year-group"));
+      const groups = Array.from(list.querySelectorAll(".year-group"));
       groups.reverse().forEach(function (g) {
         list.appendChild(g);
       });
 
       // Reverse book order within each group
       groups.forEach(function (group) {
-        var header = group.querySelector(".year-header");
-        var rows = Array.from(group.querySelectorAll(".book-row"));
+        const header = group.querySelector(".year-header");
+        const rows = Array.from(group.querySelectorAll(".book-row"));
 
         // Collect all titles (header + rows), reverse, reassign
-        var headerTitle = header.querySelector(":scope > div:last-child");
-        var titles = [headerTitle.textContent.trim()];
+        const headerTitle = header.querySelector(":scope > div:last-child");
+        const titles = [headerTitle.textContent.trim()];
         rows.forEach(function (r) {
           titles.push(
             r.querySelector(":scope > div:last-child").textContent.trim(),
@@ -99,7 +100,7 @@ import { library } from "../data/library";
 
       // Fix separators
       list.querySelectorAll(".year-group").forEach(function (g, i) {
-        var h = g.querySelector(".year-header");
+        const h = g.querySelector(".year-header");
         if (i === 0) {
           h.classList.remove("mt-5", "pt-5", "border-t", "border-white/[0.06]");
         } else {
