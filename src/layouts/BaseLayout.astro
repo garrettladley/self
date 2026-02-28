@@ -9,16 +9,21 @@ import SiteFooter from "../components/SiteFooter.astro";
 interface Props {
   title?: string;
   description?: string;
+  ogImage?: string;
   noIndex?: boolean;
 }
+
+const SITE = "https://garrettladley.com";
 
 const {
   title = "Garrett Ladley",
   description = "Garrett Ladley, Member of Technical Staff at Agency AI.",
+  ogImage = "/og.png",
   noIndex = false,
 } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname, "https://garrettladley.com");
+const canonical = new URL(Astro.url.pathname, SITE);
+const ogImageUrl = new URL(ogImage, SITE).href;
 ---
 
 <!doctype html>
@@ -27,13 +32,31 @@ const canonical = new URL(Astro.url.pathname, "https://garrettladley.com");
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <meta name="author" content="Garrett Ladley" />
     <meta name="generator" content={Astro.generator} />
+
+    {/* Open Graph */}
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Garrett Ladley" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical.href} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+
+    {/* Twitter / X */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@GarrettLadley" />
+    <meta name="twitter:creator" content="@GarrettLadley" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
     <link rel="canonical" href={canonical.href} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link
@@ -47,6 +70,24 @@ const canonical = new URL(Astro.url.pathname, "https://garrettladley.com");
     {noIndex && <meta name="robots" content="noindex" />}
     <title>{title}</title>
     <ClientRouter />
+
+    {/* JSON-LD Structured Data */}
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: "Garrett Ladley",
+        url: SITE,
+        jobTitle: "Member of Technical Staff",
+        worksFor: { "@type": "Organization", name: "Agency AI" },
+        sameAs: [
+          "https://github.com/garrettladley",
+          "https://x.com/GarrettLadley",
+          "https://linkedin.com/in/garrett-ladley",
+        ],
+      })}
+    />
   </head>
   <body class="min-h-dvh bg-background text-foreground font-mono antialiased">
     <div class="min-h-dvh flex flex-col">

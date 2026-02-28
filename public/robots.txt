@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://garrettladley.com/sitemap-index.xml
