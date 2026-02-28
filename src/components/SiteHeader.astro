@@ -12,7 +12,7 @@ const navLinks = [
 ---
 
 <header
-  class="fixed top-0 left-0 right-0 z-20 flex h-[60px] items-center justify-between border-b border-border bg-background px-page-x font-mono text-[10px] uppercase tracking-[0.2em]"
+  class="fixed top-0 left-0 right-0 z-20 flex h-15 items-center justify-between border-b border-border bg-background px-page-x font-mono text-[10px] uppercase tracking-[0.2em]"
   transition:name="site-header"
   transition:persist
   transition:animate="none"
@@ -22,7 +22,7 @@ const navLinks = [
       href="/"
       data-nav-home
       class:list={[
-        "transition-colors duration-150 no-underline",
+        "whitespace-nowrap transition-colors duration-150 no-underline",
         currentPath === "/"
           ? "text-accent cursor-default"
           : "text-foreground-muted hover:text-accent",
@@ -30,8 +30,11 @@ const navLinks = [
     >
       Garrett Ladley
     </a>
-    <span class="text-border" role="separator">/</span>
-    <nav aria-label="Site navigation" class="flex items-center gap-x-3">
+    <span class="hidden sm:inline text-border" role="separator">/</span>
+    <nav
+      aria-label="Site navigation"
+      class="hidden sm:flex items-center gap-x-3"
+    >
       {
         navLinks.map((link, i) => (
           <>
@@ -57,14 +60,67 @@ const navLinks = [
       }
     </nav>
   </div>
-  <div
-    class="text-foreground-muted cursor-pointer select-none"
-    id="clock"
-    title="Click to toggle format"
-  >
-    00:00:00
+  <div class="flex items-center gap-x-4">
+    <div
+      class="hidden sm:block text-foreground-muted cursor-pointer select-none"
+      id="clock"
+      title="Click to toggle format"
+    >
+      00:00:00
+    </div>
+    <button
+      id="menu-toggle"
+      class="sm:hidden text-foreground-muted hover:text-accent transition-colors duration-150 p-1"
+      aria-label="Toggle menu"
+      aria-expanded="false"
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 18 18"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+      >
+        <line x1="2" y1="4.5" x2="16" y2="4.5" class="menu-top"></line>
+        <line x1="2" y1="9" x2="16" y2="9" class="menu-mid"></line>
+        <line x1="2" y1="13.5" x2="16" y2="13.5" class="menu-bot"></line>
+      </svg>
+    </button>
   </div>
 </header>
+
+<!-- Mobile menu overlay -->
+<div
+  id="mobile-menu"
+  class="fixed inset-0 z-10 hidden sm:hidden!"
+  transition:persist
+>
+  <div class="absolute inset-0 bg-background/95 backdrop-blur-sm"></div>
+  <nav
+    class="relative flex flex-col items-start gap-y-6 px-page-x pt-20 font-mono text-[10px] uppercase tracking-[0.2em]"
+    aria-label="Mobile navigation"
+  >
+    {
+      navLinks.map((link) => (
+        <a
+          href={link.href}
+          data-nav-link
+          data-mobile-link
+          class:list={[
+            "transition-colors duration-150 no-underline",
+            currentPath.startsWith(link.href)
+              ? "text-accent hover:text-accent cursor-default"
+              : "text-foreground-muted hover:text-accent",
+          ]}
+        >
+          {link.label}
+        </a>
+      ))
+    }
+  </nav>
+</div>
 
 <script is:inline data-astro-rerun>
   (function () {
@@ -118,16 +174,48 @@ const navLinks = [
       "transition-colors duration-150 no-underline text-accent hover:text-accent cursor-default";
     const inactiveClass =
       "transition-colors duration-150 no-underline text-foreground-muted hover:text-accent";
+    const homeActiveClass = "whitespace-nowrap " + activeClass;
+    const homeInactiveClass = "whitespace-nowrap " + inactiveClass;
+    const mobileActiveClass = activeClass;
+    const mobileInactiveClass = inactiveClass;
 
     const home = document.querySelector("[data-nav-home]");
     if (home) {
-      home.className = path === "/" ? activeClass : inactiveClass;
+      home.className = path === "/" ? homeActiveClass : homeInactiveClass;
     }
     document.querySelectorAll("[data-nav-link]").forEach(function (el) {
-      el.className = path.startsWith(el.getAttribute("href"))
-        ? activeClass
-        : inactiveClass;
+      const isMobile = el.hasAttribute("data-mobile-link");
+      const active = path.startsWith(el.getAttribute("href"));
+      if (isMobile) {
+        el.className = active ? mobileActiveClass : mobileInactiveClass;
+      } else {
+        el.className = active ? activeClass : inactiveClass;
+      }
     });
+
+    // Mobile menu toggle
+    const menuToggle = document.getElementById("menu-toggle");
+    const mobileMenu = document.getElementById("mobile-menu");
+    if (menuToggle && mobileMenu && !menuToggle.__menuBound) {
+      menuToggle.__menuBound = true;
+      menuToggle.addEventListener("click", function () {
+        const isOpen = !mobileMenu.classList.contains("hidden");
+        mobileMenu.classList.toggle("hidden", isOpen);
+        menuToggle.setAttribute("aria-expanded", String(!isOpen));
+      });
+      // Close menu when a mobile link is clicked
+      mobileMenu.addEventListener("click", function (e) {
+        if (e.target.closest("[data-mobile-link]")) {
+          mobileMenu.classList.add("hidden");
+          menuToggle.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
+    // Ensure mobile menu is closed on navigation
+    if (mobileMenu) {
+      mobileMenu.classList.add("hidden");
+      if (menuToggle) menuToggle.setAttribute("aria-expanded", "false");
+    }
 
     // Single delegated listener on the header to block clicks on active links
     const headerEl = document.querySelector("header");
