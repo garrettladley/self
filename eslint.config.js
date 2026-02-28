@@ -22,12 +22,24 @@ export default [
   ...eslintPluginAstro.configs.recommended,
   ...eslintPluginAstro.configs["jsx-a11y-recommended"],
   {
-    files: [...JS_FILES, "**/*.astro"],
+    files: ["**/*.astro"],
     languageOptions: {
       globals: {
         ...globals.browser,
         ...globals.es2025,
         Astro: "readonly",
+      },
+      parserOptions: {
+        parser: tseslint.parser,
+      },
+    },
+  },
+  {
+    files: JS_FILES,
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.es2025,
       },
     },
   },
@@ -41,6 +53,7 @@ export default [
     rules: {
       ...tailwindcss.configs.recommended.rules,
       "tailwindcss/no-invalid-properties": "off",
+      "tailwindcss/no-important": "off",
     },
   },
 ];

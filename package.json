@@ -50,6 +50,7 @@
       "path-to-regexp": ">=6.3.0"
     },
     "onlyBuiltDependencies": [
+      "@poupe/eslint-plugin-tailwindcss",
       "chromedriver"
     ]
   }
