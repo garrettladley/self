@@ -69,7 +69,7 @@ const ogImageUrl = new URL(ogImage, SITE).href;
     <meta name="theme-color" content="#2a334f" />
     {noIndex && <meta name="robots" content="noindex" />}
     <title>{title}</title>
-    <ClientRouter />
+    <ClientRouter fallback="swap" />
 
     {/* JSON-LD Structured Data */}
     <script
