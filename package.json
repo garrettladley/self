@@ -8,7 +8,7 @@
     "build": "astro build",
     "typecheck": "astro check",
     "lint": "oxlint .",
-    "a11y": "browser-driver-manager install chrome && axe http://localhost:4321 --exit",
+    "a11y": "axe http://localhost:4321 http://localhost:4321/projects http://localhost:4321/library http://localhost:4321/404 --exit",
     "format": "oxfmt --write . && prettier --write \"src/**/*.astro\"",
     "format:check": "oxfmt --check . && prettier --check \"src/**/*.astro\"",
     "vercel:bootstrap": "bash ./scripts/vercel-bootstrap.sh",
