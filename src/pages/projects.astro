@@ -54,4 +54,28 @@ import { projects } from "../data/projects";
       }
     </div>
   </main>
+  <script
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      itemListElement: projects.map((project, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "SoftwareSourceCode",
+          name: project.name,
+          description: project.description,
+          ...(project.href && { codeRepository: project.href }),
+          programmingLanguage: project.tools,
+          author: {
+            "@type": "Person",
+            name: "Garrett Ladley",
+            url: "https://garrettladley.com",
+          },
+        },
+      })),
+    })}
+  />
 </BaseLayout>
