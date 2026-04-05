@@ -12,7 +12,7 @@ import { library } from "../data/library";
   >
     <h1 class="sr-only">Library</h1>
     <div
-      class="flex items-center justify-between font-mono text-[13px] tracking-[0.04em] uppercase text-foreground-muted mb-6"
+      class="flex items-center justify-between font-mono text-meta tracking-[0.04em] uppercase text-foreground-muted mb-6"
     >
       <span class="text-foreground-dim"
         >{library.reduce((n, yg) => n + yg.books.length, 0)} books</span
@@ -27,7 +27,7 @@ import { library } from "../data/library";
 
     <div
       id="book-list"
-      class="flex flex-col font-mono text-[15px] tracking-[0.04em] uppercase"
+      class="flex flex-col font-mono text-body tracking-[0.04em] uppercase"
     >
       {
         library.map((yearGroup, yi) => (
@@ -38,7 +38,7 @@ import { library } from "../data/library";
                 yi > 0 && "mt-5 pt-5 border-t border-white/6",
               ]}
             >
-              <div class="text-accent text-[17px] font-medium">
+              <div class="text-accent text-heading font-medium">
                 {yearGroup.year}
               </div>
               <div class="text-foreground-muted">

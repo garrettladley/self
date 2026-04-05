@@ -1,0 +1,280 @@
+---
+type Command = {
+  label: string;
+  hint: string;
+  href: string;
+  type: "page" | "link";
+};
+
+const commands: Command[] = [
+  { label: "Home", hint: "/", href: "/", type: "page" },
+  { label: "Projects", hint: "/projects", href: "/projects", type: "page" },
+  { label: "Library", hint: "/library", href: "/library", type: "page" },
+  {
+    label: "GitHub",
+    hint: "github.com/garrettladley",
+    href: "https://github.com/garrettladley",
+    type: "link",
+  },
+  {
+    label: "X",
+    hint: "x.com/GarrettLadley",
+    href: "https://x.com/GarrettLadley",
+    type: "link",
+  },
+  {
+    label: "LinkedIn",
+    hint: "linkedin.com/in/garrett-ladley",
+    href: "https://linkedin.com/in/garrett-ladley/",
+    type: "link",
+  },
+];
+---
+
+<!-- Command Palette — ⌘K / Ctrl+K -->
+<command-palette data-commands={JSON.stringify(commands)}>
+  <div
+    id="cmd-palette"
+    class="fixed inset-0 z-50 hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Command palette"
+  >
+    <!-- Backdrop -->
+    <div
+      id="cmd-backdrop"
+      class="absolute inset-0 bg-background/80 backdrop-blur-[2px]"
+    >
+    </div>
+
+    <!-- Centering wrapper — input anchored above page center -->
+    <div
+      class="absolute inset-0 flex items-center justify-center pointer-events-none"
+    >
+      <div
+        id="cmd-panel"
+        class="w-[min(480px,calc(100vw-2rem))] border border-border bg-background font-mono text-chrome uppercase tracking-[0.15em] shadow-[0_0_80px_rgba(0,0,0,0.5)] opacity-0 pointer-events-auto"
+        style="margin-bottom: auto; margin-top: calc(35vh - 22px)"
+      >
+        <!-- Input row -->
+        <div class="flex items-center border-b border-border px-4 h-11">
+          <span class="text-foreground-dim mr-2 text-chrome select-none"
+            >&gt;</span
+          >
+          <input
+            id="cmd-input"
+            type="text"
+            placeholder="NAVIGATE..."
+            spellcheck="false"
+            autocomplete="off"
+            class="flex-1 bg-transparent text-foreground text-chrome uppercase tracking-[0.15em] font-mono outline-none placeholder:text-foreground-dim/50"
+          />
+          <kbd
+            class="text-chrome text-foreground-dim border border-border px-1.5 py-0.5 tracking-[0.1em] select-none"
+            >ESC</kbd
+          >
+        </div>
+
+        <!-- Results -->
+        <div id="cmd-results" class="max-h-[320px] overflow-y-auto">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Footer -->
+        <div
+          class="flex items-center justify-between border-t border-border px-4 h-8 text-chrome text-foreground-dim tracking-[0.1em] select-none"
+        >
+          <span
+            ><kbd class="border border-border px-1 py-0.5 mr-0.5">↑</kbd>
+            <kbd class="border border-border px-1 py-0.5">↓</kbd> NAVIGATE</span
+          >
+          <span><kbd class="border border-border px-1 py-0.5">↵</kbd> OPEN</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</command-palette>
+
+<script>
+  type Command = {
+    label: string;
+    hint: string;
+    href: string;
+    type: "page" | "link";
+  };
+
+  class CommandPaletteElement extends HTMLElement {
+    private commands: Command[] = [];
+    private root!: HTMLElement;
+    private panel!: HTMLElement;
+    private input!: HTMLInputElement;
+    private results!: HTMLElement;
+    private backdrop!: HTMLElement;
+    private activeIdx = 0;
+    private filtered: Command[] = [];
+
+    connectedCallback() {
+      this.commands = JSON.parse(this.dataset.commands || "[]");
+      this.filtered = this.commands.slice();
+
+      this.root = this.querySelector("#cmd-palette")!;
+      this.panel = this.querySelector("#cmd-panel")!;
+      this.input = this.querySelector("#cmd-input")!;
+      this.results = this.querySelector("#cmd-results")!;
+      this.backdrop = this.querySelector("#cmd-backdrop")!;
+
+      document.addEventListener("keydown", this.onGlobalKeydown);
+      this.input.addEventListener("input", this.onInput);
+      this.input.addEventListener("keydown", this.onInputKeydown);
+      this.results.addEventListener("click", this.onClick);
+      this.results.addEventListener("mousemove", this.onMouseMove);
+      this.backdrop.addEventListener("click", this.close);
+    }
+
+    disconnectedCallback() {
+      document.removeEventListener("keydown", this.onGlobalKeydown);
+    }
+
+    private render() {
+      this.results.innerHTML = "";
+      this.results.classList.toggle("py-1", this.filtered.length > 0);
+      this.filtered.forEach((cmd, i) => {
+        const row = document.createElement("div");
+        row.className =
+          "flex items-center justify-between px-4 h-10 cursor-pointer transition-colors duration-75 " +
+          (i === this.activeIdx
+            ? "bg-border/40 text-accent"
+            : "text-foreground-muted hover:bg-border/20 hover:text-foreground-soft");
+        row.dataset.cmdIdx = String(i);
+
+        const label = document.createElement("span");
+        label.textContent = cmd.label;
+
+        const hint = document.createElement("span");
+        hint.className = "text-chrome text-foreground-dim tracking-[0.08em]";
+        hint.textContent = cmd.type === "link" ? `↗ ${cmd.hint}` : cmd.hint;
+
+        row.appendChild(label);
+        row.appendChild(hint);
+        this.results.appendChild(row);
+      });
+    }
+
+    private open = () => {
+      this.root.classList.remove("hidden");
+      requestAnimationFrame(() => {
+        this.panel.style.opacity = "1";
+      });
+      this.input.value = "";
+      this.filtered = this.commands.slice();
+      this.activeIdx = 0;
+      this.render();
+      this.input.focus();
+    };
+
+    private close = () => {
+      this.panel.style.opacity = "0";
+      setTimeout(() => {
+        this.root.classList.add("hidden");
+      }, 100);
+    };
+
+    private run() {
+      const cmd = this.filtered[this.activeIdx];
+      if (!cmd) return;
+      this.close();
+      setTimeout(() => {
+        if (cmd.type === "link") {
+          window.open(cmd.href, "_blank");
+        } else {
+          window.location.href = cmd.href;
+        }
+      }, 80);
+    }
+
+    private onGlobalKeydown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        if (this.root.classList.contains("hidden")) {
+          this.open();
+        } else {
+          this.close();
+        }
+      }
+      if (e.key === "Escape" && !this.root.classList.contains("hidden")) {
+        e.preventDefault();
+        this.close();
+      }
+    };
+
+    private onInput = () => {
+      const q = this.input.value.toLowerCase().replace(/\s+/g, "");
+      this.filtered = this.commands.filter(
+        (cmd) =>
+          cmd.label.toLowerCase().includes(q) ||
+          cmd.hint.toLowerCase().replace(/\s+/g, "").includes(q),
+      );
+      this.activeIdx = 0;
+      this.render();
+    };
+
+    private onInputKeydown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        this.activeIdx = Math.min(this.activeIdx + 1, this.filtered.length - 1);
+        this.render();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        this.activeIdx = Math.max(this.activeIdx - 1, 0);
+        this.render();
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        this.run();
+      }
+    };
+
+    private onClick = (e: MouseEvent) => {
+      const row = (e.target as HTMLElement).closest<HTMLElement>(
+        "[data-cmd-idx]",
+      );
+      if (row) {
+        this.activeIdx = parseInt(row.dataset.cmdIdx!, 10);
+        this.run();
+      }
+    };
+
+    private onMouseMove = (e: MouseEvent) => {
+      const row = (e.target as HTMLElement).closest<HTMLElement>(
+        "[data-cmd-idx]",
+      );
+      if (row) {
+        const idx = parseInt(row.dataset.cmdIdx!, 10);
+        if (idx !== this.activeIdx) {
+          this.activeIdx = idx;
+          this.render();
+        }
+      }
+    };
+  }
+
+  customElements.define("command-palette", CommandPaletteElement);
+</script>
+
+<style>
+  #cmd-panel {
+    transition: opacity 0.1s ease;
+  }
+
+  #cmd-results::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  #cmd-results::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  #cmd-results::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+  }
+</style>
