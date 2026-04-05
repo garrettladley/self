@@ -76,16 +76,43 @@ const ogImageUrl = new URL(ogImage, SITE).href;
       type="application/ld+json"
       set:html={JSON.stringify({
         "@context": "https://schema.org",
-        "@type": "Person",
-        name: "Garrett Ladley",
-        url: SITE,
-        jobTitle: "Member of Technical Staff",
-        worksFor: { "@type": "Organization", name: "Agency AI" },
-        sameAs: [
-          "https://github.com/garrettladley",
-          "https://x.com/GarrettLadley",
-          "https://linkedin.com/in/garrett-ladley",
-        ],
+        "@type": "ProfilePage",
+        mainEntity: {
+          "@type": "Person",
+          name: "Garrett Ladley",
+          url: SITE,
+          description:
+            "Software engineer specializing in Go and Rust, passionate about building products, backend development, and distributed systems. Member of Technical Staff at Agency AI in New York City.",
+          jobTitle: "Member of Technical Staff",
+          worksFor: { "@type": "Organization", name: "Agency AI" },
+          knowsAbout: [
+            "Go",
+            "Rust",
+            "Backend Development",
+            "Distributed Systems",
+            "AI Agents",
+            "Infrastructure",
+          ],
+          alumniOf: [
+            {
+              "@type": "CollegeOrUniversity",
+              name: "Northeastern University",
+            },
+            {
+              "@type": "HighSchool",
+              name: "New Canaan High School",
+            },
+            {
+              "@type": "MiddleSchool",
+              name: "Hong Kong International School",
+            },
+          ],
+          sameAs: [
+            "https://github.com/garrettladley",
+            "https://x.com/GarrettLadley",
+            "https://linkedin.com/in/garrett-ladley",
+          ],
+        },
       })}
     />
   </head>
