@@ -1,0 +1,277 @@
+<!-- Command Palette — ⌘K / Ctrl+K -->
+<div
+  id="cmd-palette"
+  class="fixed inset-0 z-50 hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Command palette"
+>
+  <!-- Backdrop -->
+  <div
+    id="cmd-backdrop"
+    class="absolute inset-0 bg-background/80 backdrop-blur-[2px]"
+  >
+  </div>
+
+  <!-- Panel -->
+  <div
+    id="cmd-panel"
+    class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(480px,calc(100vw-2rem))] border border-border bg-background font-mono text-[11px] uppercase tracking-[0.15em] shadow-[0_0_80px_rgba(0,0,0,0.5)] opacity-0"
+  >
+    <!-- Input row -->
+    <div class="flex items-center border-b border-border px-4 h-11">
+      <span class="text-foreground-dim mr-2 text-[10px] select-none">&gt;</span>
+      <input
+        id="cmd-input"
+        type="text"
+        placeholder="NAVIGATE..."
+        spellcheck="false"
+        autocomplete="off"
+        class="flex-1 bg-transparent text-foreground text-[11px] uppercase tracking-[0.15em] font-mono outline-none placeholder:text-foreground-dim/50"
+      />
+      <kbd
+        class="text-[9px] text-foreground-dim border border-border px-1.5 py-0.5 tracking-[0.1em] select-none"
+        >ESC</kbd
+      >
+    </div>
+
+    <!-- Results -->
+    <div id="cmd-results" class="max-h-[320px] overflow-y-auto py-1">
+      <!-- Populated by JS -->
+    </div>
+
+    <!-- Footer -->
+    <div
+      class="flex items-center justify-between border-t border-border px-4 h-8 text-[9px] text-foreground-dim tracking-[0.1em] select-none"
+    >
+      <span
+        ><kbd class="border border-border px-1 py-0.5 mr-0.5">↑</kbd>
+        <kbd class="border border-border px-1 py-0.5">↓</kbd> NAVIGATE</span
+      >
+      <span><kbd class="border border-border px-1 py-0.5">↵</kbd> OPEN</span>
+    </div>
+  </div>
+</div>
+
+<script is:inline data-astro-rerun>
+  (function () {
+    if (window.__cmdPaletteBound) return;
+    window.__cmdPaletteBound = true;
+
+    const commands = [
+      {
+        label: "Home",
+        hint: "/",
+        action: function () {
+          window.location.href = "/";
+        },
+        type: "page",
+      },
+      {
+        label: "Projects",
+        hint: "/projects",
+        action: function () {
+          window.location.href = "/projects";
+        },
+        type: "page",
+      },
+      {
+        label: "Library",
+        hint: "/library",
+        action: function () {
+          window.location.href = "/library";
+        },
+        type: "page",
+      },
+      {
+        label: "GitHub",
+        hint: "github.com/garrettladley",
+        action: function () {
+          window.open("https://github.com/garrettladley", "_blank");
+        },
+        type: "link",
+      },
+      {
+        label: "X",
+        hint: "x.com/GarrettLadley",
+        action: function () {
+          window.open("https://x.com/GarrettLadley", "_blank");
+        },
+        type: "link",
+      },
+      {
+        label: "LinkedIn",
+        hint: "linkedin.com/in/garrett-ladley",
+        action: function () {
+          window.open("https://linkedin.com/in/garrett-ladley/", "_blank");
+        },
+        type: "link",
+      },
+    ];
+
+    const root = document.getElementById("cmd-palette");
+    const backdrop = document.getElementById("cmd-backdrop");
+    const panel = document.getElementById("cmd-panel");
+    const input = document.getElementById("cmd-input");
+    const results = document.getElementById("cmd-results");
+    let activeIdx = 0;
+    let filtered = commands.slice();
+
+    function render() {
+      results.innerHTML = "";
+      filtered.forEach(function (cmd, i) {
+        const row = document.createElement("div");
+        row.className =
+          "flex items-center justify-between px-4 h-9 cursor-pointer transition-colors duration-75 " +
+          (i === activeIdx
+            ? "bg-border/40 text-accent"
+            : "text-foreground-muted hover:bg-border/20 hover:text-foreground-soft");
+        row.setAttribute("data-cmd-idx", String(i));
+
+        const left = document.createElement("span");
+        left.className = "flex items-center gap-2";
+
+        const arrow = document.createElement("span");
+        arrow.className =
+          "text-[10px] w-3 " + (i === activeIdx ? "opacity-100" : "opacity-0");
+        arrow.textContent = "›";
+
+        const label = document.createElement("span");
+        label.textContent = cmd.label;
+
+        left.appendChild(arrow);
+        left.appendChild(label);
+
+        const hint = document.createElement("span");
+        hint.className = "text-[9px] text-foreground-dim tracking-[0.08em]";
+        hint.textContent = cmd.type === "link" ? "↗ " + cmd.hint : cmd.hint;
+
+        row.appendChild(left);
+        row.appendChild(hint);
+        results.appendChild(row);
+      });
+    }
+
+    function filter() {
+      const q = input.value.toLowerCase().replace(/\s+/g, "");
+      filtered = commands.filter(function (cmd) {
+        return (
+          cmd.label.toLowerCase().includes(q) ||
+          cmd.hint.toLowerCase().replace(/\s+/g, "").includes(q)
+        );
+      });
+      activeIdx = 0;
+      render();
+    }
+
+    function open() {
+      root.classList.remove("hidden");
+      // Trigger animation on next frame
+      requestAnimationFrame(function () {
+        panel.style.opacity = "1";
+        panel.style.transform = "translateX(-50%) translateY(-50%)";
+      });
+      input.value = "";
+      filtered = commands.slice();
+      activeIdx = 0;
+      render();
+      input.focus();
+    }
+
+    function close() {
+      panel.style.opacity = "0";
+      panel.style.transform = "translateX(-50%) translateY(calc(-50% + 4px))";
+      setTimeout(function () {
+        root.classList.add("hidden");
+      }, 120);
+    }
+
+    function run() {
+      if (filtered[activeIdx]) {
+        close();
+        setTimeout(function () {
+          filtered[activeIdx].action();
+        }, 80);
+      }
+    }
+
+    // Keyboard open/close
+    document.addEventListener("keydown", function (e) {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        if (root.classList.contains("hidden")) {
+          open();
+        } else {
+          close();
+        }
+      }
+      if (e.key === "Escape" && !root.classList.contains("hidden")) {
+        e.preventDefault();
+        close();
+      }
+    });
+
+    // Input filtering
+    input.addEventListener("input", filter);
+
+    // Arrow keys + enter inside palette
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        activeIdx = Math.min(activeIdx + 1, filtered.length - 1);
+        render();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        activeIdx = Math.max(activeIdx - 1, 0);
+        render();
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        run();
+      }
+    });
+
+    // Click on result
+    results.addEventListener("click", function (e) {
+      const row = e.target.closest("[data-cmd-idx]");
+      if (row) {
+        activeIdx = parseInt(row.getAttribute("data-cmd-idx"), 10);
+        run();
+      }
+    });
+
+    // Mouse hover updates active
+    results.addEventListener("mousemove", function (e) {
+      const row = e.target.closest("[data-cmd-idx]");
+      if (row) {
+        const idx = parseInt(row.getAttribute("data-cmd-idx"), 10);
+        if (idx !== activeIdx) {
+          activeIdx = idx;
+          render();
+        }
+      }
+    });
+
+    // Backdrop click
+    backdrop.addEventListener("click", close);
+  })();
+</script>
+
+<style>
+  #cmd-panel {
+    transition:
+      opacity 0.12s ease,
+      transform 0.12s ease;
+  }
+
+  #cmd-results::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  #cmd-results::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  #cmd-results::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+  }
+</style>

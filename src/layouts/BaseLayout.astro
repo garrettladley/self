@@ -5,6 +5,7 @@ import SpeedInsights from "@vercel/speed-insights/astro";
 import Analytics from "@vercel/analytics/astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
+import CommandPalette from "../components/CommandPalette.astro";
 
 interface Props {
   title?: string;
@@ -122,6 +123,7 @@ const ogImageUrl = new URL(ogImage, SITE).href;
       <slot />
       <SiteFooter />
     </div>
+    <CommandPalette />
     <SpeedInsights />
     <Analytics />
   </body>
