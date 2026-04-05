@@ -13,42 +13,49 @@
   >
   </div>
 
-  <!-- Panel -->
+  <!-- Centering wrapper -->
   <div
-    id="cmd-panel"
-    class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(480px,calc(100vw-2rem))] border border-border bg-background font-mono text-[11px] uppercase tracking-[0.15em] shadow-[0_0_80px_rgba(0,0,0,0.5)] opacity-0"
+    class="absolute inset-0 flex items-center justify-center pointer-events-none"
   >
-    <!-- Input row -->
-    <div class="flex items-center border-b border-border px-4 h-11">
-      <span class="text-foreground-dim mr-2 text-[10px] select-none">&gt;</span>
-      <input
-        id="cmd-input"
-        type="text"
-        placeholder="NAVIGATE..."
-        spellcheck="false"
-        autocomplete="off"
-        class="flex-1 bg-transparent text-foreground text-[11px] uppercase tracking-[0.15em] font-mono outline-none placeholder:text-foreground-dim/50"
-      />
-      <kbd
-        class="text-[9px] text-foreground-dim border border-border px-1.5 py-0.5 tracking-[0.1em] select-none"
-        >ESC</kbd
-      >
-    </div>
-
-    <!-- Results -->
-    <div id="cmd-results" class="max-h-[320px] overflow-y-auto py-1">
-      <!-- Populated by JS -->
-    </div>
-
-    <!-- Footer -->
+    <!-- Panel -->
     <div
-      class="flex items-center justify-between border-t border-border px-4 h-8 text-[9px] text-foreground-dim tracking-[0.1em] select-none"
+      id="cmd-panel"
+      class="w-[min(480px,calc(100vw-2rem))] border border-border bg-background font-mono text-[11px] uppercase tracking-[0.15em] shadow-[0_0_80px_rgba(0,0,0,0.5)] opacity-0 translate-y-1 pointer-events-auto"
     >
-      <span
-        ><kbd class="border border-border px-1 py-0.5 mr-0.5">↑</kbd>
-        <kbd class="border border-border px-1 py-0.5">↓</kbd> NAVIGATE</span
+      <!-- Input row -->
+      <div class="flex items-center border-b border-border px-4 h-11">
+        <span class="text-foreground-dim mr-2 text-[10px] select-none"
+          >&gt;</span
+        >
+        <input
+          id="cmd-input"
+          type="text"
+          placeholder="NAVIGATE..."
+          spellcheck="false"
+          autocomplete="off"
+          class="flex-1 bg-transparent text-foreground text-[11px] uppercase tracking-[0.15em] font-mono outline-none placeholder:text-foreground-dim/50"
+        />
+        <kbd
+          class="text-[9px] text-foreground-dim border border-border px-1.5 py-0.5 tracking-[0.1em] select-none"
+          >ESC</kbd
+        >
+      </div>
+
+      <!-- Results -->
+      <div id="cmd-results" class="max-h-[320px] overflow-y-auto py-1">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- Footer -->
+      <div
+        class="flex items-center justify-between border-t border-border px-4 h-8 text-[9px] text-foreground-dim tracking-[0.1em] select-none"
       >
-      <span><kbd class="border border-border px-1 py-0.5">↵</kbd> OPEN</span>
+        <span
+          ><kbd class="border border-border px-1 py-0.5 mr-0.5">↑</kbd>
+          <kbd class="border border-border px-1 py-0.5">↓</kbd> NAVIGATE</span
+        >
+        <span><kbd class="border border-border px-1 py-0.5">↵</kbd> OPEN</span>
+      </div>
     </div>
   </div>
 </div>
@@ -169,7 +176,7 @@
       // Trigger animation on next frame
       requestAnimationFrame(function () {
         panel.style.opacity = "1";
-        panel.style.transform = "translateX(-50%) translateY(-50%)";
+        panel.style.transform = "translateY(0)";
       });
       input.value = "";
       filtered = commands.slice();
@@ -180,7 +187,7 @@
 
     function close() {
       panel.style.opacity = "0";
-      panel.style.transform = "translateX(-50%) translateY(calc(-50% + 4px))";
+      panel.style.transform = "translateY(4px)";
       setTimeout(function () {
         root.classList.add("hidden");
       }, 120);
