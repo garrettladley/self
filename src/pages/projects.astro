@@ -12,7 +12,7 @@ import { projects } from "../data/projects";
   >
     <h1 class="sr-only">Projects</h1>
     <div
-      class="flex flex-col w-full font-mono text-[15px] tracking-[0.04em] uppercase gap-1"
+      class="flex flex-col w-full font-mono text-body tracking-[0.04em] uppercase gap-1"
     >
       {
         projects.map((project) => (
@@ -32,10 +32,7 @@ import { projects } from "../data/projects";
                   project.name
                 )}
                 {project.private && (
-                  <span class="text-foreground-dim text-[13px]">
-                    {" "}
-                    (private)
-                  </span>
+                  <span class="text-foreground-dim text-meta"> (private)</span>
                 )}
               </span>
               <span class="text-foreground-dim">&gt;</span>
@@ -43,7 +40,7 @@ import { projects } from "../data/projects";
             <div class="overflow-hidden text-ellipsis whitespace-nowrap">
               {project.description}
               {project.tools.length > 0 && (
-                <span class="text-foreground-dim text-[13px]">
+                <span class="text-foreground-dim text-meta">
                   {" "}
                   · {project.tools.join(" · ")}
                 </span>

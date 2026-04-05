@@ -18,6 +18,15 @@ const config = {
       fontFamily: {
         mono: ["var(--font-mono)"],
       },
+      fontSize: {
+        chrome: "10px",
+        meta: "13px",
+        body: "15px",
+        heading: "17px",
+        "error-body": "clamp(0.95rem, 2.2vw, 1.08rem)",
+        "error-heading": "clamp(1rem, 2.6vw, 1.35rem)",
+        hero: "clamp(2.5rem, 5vw, 5rem)",
+      },
       maxWidth: {
         page: "var(--page-width)",
       },
