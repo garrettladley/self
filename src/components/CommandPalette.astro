@@ -53,7 +53,7 @@ const commands: Command[] = [
     >
       <div
         id="cmd-panel"
-        class="w-[min(480px,calc(100vw-2rem))] border border-border bg-background font-mono text-chrome uppercase tracking-[0.15em] shadow-[0_0_80px_rgba(0,0,0,0.5)] opacity-0 translate-y-1 pointer-events-auto origin-top"
+        class="w-[min(480px,calc(100vw-2rem))] border border-border bg-background font-mono text-chrome uppercase tracking-[0.15em] shadow-[0_0_80px_rgba(0,0,0,0.5)] opacity-0 translate-y-1 blur-[4px] pointer-events-auto origin-top"
         style="margin-bottom: auto; margin-top: calc(35vh - 22px)"
       >
         <!-- Input row -->
@@ -141,10 +141,13 @@ const commands: Command[] = [
       this.filtered.forEach((cmd, i) => {
         const row = document.createElement("div");
         row.className =
-          "flex items-center justify-between px-4 h-9 cursor-pointer transition-colors duration-75 " +
+          "flex items-center justify-between px-4 h-10 cursor-pointer transition-colors duration-75 " +
           (i === this.activeIdx
             ? "bg-border/40 text-accent"
             : "text-foreground-muted hover:bg-border/20 hover:text-foreground-soft");
+        row.style.opacity = "0";
+        row.style.transform = "translateY(4px)";
+        row.style.filter = "blur(4px)";
         row.dataset.cmdIdx = String(i);
 
         const label = document.createElement("span");
@@ -158,6 +161,17 @@ const commands: Command[] = [
         row.appendChild(hint);
         this.results.appendChild(row);
       });
+
+      requestAnimationFrame(() => {
+        const rows = this.results.children;
+        for (let i = 0; i < rows.length; i++) {
+          const el = rows[i] as HTMLElement;
+          el.style.transition = `opacity 0.15s cubic-bezier(0.2,0,0,1) ${i * 30}ms, transform 0.15s cubic-bezier(0.2,0,0,1) ${i * 30}ms, filter 0.15s cubic-bezier(0.2,0,0,1) ${i * 30}ms, background-color 0.075s`;
+          el.style.opacity = "1";
+          el.style.transform = "translateY(0)";
+          el.style.filter = "blur(0px)";
+        }
+      });
     }
 
     private open = () => {
@@ -165,6 +179,7 @@ const commands: Command[] = [
       requestAnimationFrame(() => {
         this.panel.style.opacity = "1";
         this.panel.style.transform = "translateY(0)";
+        this.panel.style.filter = "blur(0px)";
       });
       this.input.value = "";
       this.filtered = this.commands.slice();
@@ -176,9 +191,10 @@ const commands: Command[] = [
     private close = () => {
       this.panel.style.opacity = "0";
       this.panel.style.transform = "translateY(4px)";
+      this.panel.style.filter = "blur(4px)";
       setTimeout(() => {
         this.root.classList.add("hidden");
-      }, 120);
+      }, 150);
     };
 
     private run() {
@@ -265,8 +281,9 @@ const commands: Command[] = [
 <style>
   #cmd-panel {
     transition:
-      opacity 0.12s ease,
-      transform 0.12s ease;
+      opacity 0.15s cubic-bezier(0.2, 0, 0, 1),
+      transform 0.15s cubic-bezier(0.2, 0, 0, 1),
+      filter 0.15s cubic-bezier(0.2, 0, 0, 1);
   }
 
   #cmd-results::-webkit-scrollbar {
