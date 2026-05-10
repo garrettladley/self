@@ -35,12 +35,8 @@ export const library: LibraryYear[] = [
       { title: "Atomic Habits" },
       { title: "Distributed Services with Go" },
       { title: "Concurrency in Go" },
-      {
-        title: "Writing an Interpreter in Go",
-      },
-      {
-        title: "Writing a Compiler in Go",
-      },
+      { title: "Writing a Compiler in Go" },
+      { title: "Writing an Interpreter in Go" },
     ],
   },
 ];
