@@ -29,7 +29,7 @@ Garrett Ladley is a software engineer specializing in Go and Rust. He currently 
 - Website: ${SITE}
 - GitHub: https://github.com/garrettladley
 - LinkedIn: https://linkedin.com/in/garrett-ladley
-- X: https://x.com/GarrettLadley
+- X: https://x.com/garrettladley
 
 ## Pages
 
