@@ -6,7 +6,14 @@ export type Project = {
   tools: string[];
 };
 
+// Most recent first.
 export const projects: Project[] = [
+  {
+    name: "pkgsite-mcp",
+    href: "https://github.com/garrettladley/pkgsite-mcp",
+    description: "MCP server for pkg.go.dev",
+    tools: ["Go"],
+  },
   {
     name: "intern",
     private: true,
