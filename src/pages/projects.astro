@@ -1,6 +1,14 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { projects } from "../data/projects";
+
+const withProjectTracking = (href: string) => {
+  const url = new URL(href);
+  url.searchParams.set("utm_source", "garrettladley.com");
+  url.searchParams.set("utm_medium", "projects");
+  url.searchParams.set("utm_campaign", "self-site");
+  return url.toString();
+};
 ---
 
 <BaseLayout
@@ -21,7 +29,7 @@ import { projects } from "../data/projects";
               <span>
                 {project.href ? (
                   <a
-                    href={project.href}
+                    href={withProjectTracking(project.href)}
                     target="_blank"
                     rel="noreferrer"
                     class="transition-colors duration-200 hover:text-accent"
