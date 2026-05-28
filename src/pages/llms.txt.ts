@@ -13,10 +13,7 @@ function generateLlmsTxt(): string {
     .join("\n");
 
   const bookLines = library
-    .map(
-      (year) =>
-        `- ${year.year}:\n${year.books.map((b) => `  - ${b.title}`).join("\n")}`,
-    )
+    .map((year) => `- ${year.year}:\n${year.books.map((b) => `  - ${b.title}`).join("\n")}`)
     .join("\n");
 
   return `# Garrett Ladley
