@@ -29,7 +29,7 @@ export const projects: Project[] = [
   {
     name: "thoop",
     href: "https://github.com/garrettladley/thoop",
-    description: "TUI for your WHOOP",
+    description: "Local-first TUI & MCP for your WHOOP data",
     tools: ["Go"],
   },
   {
