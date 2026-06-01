@@ -6,7 +6,7 @@ export type Project = {
   tools: string[];
 };
 
-// Most recent first.
+// ordered reverse chronologically (most recent first)
 export const projects: Project[] = [
   {
     name: "skiplist",
