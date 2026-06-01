@@ -9,6 +9,12 @@ export type Project = {
 // Most recent first.
 export const projects: Project[] = [
   {
+    name: "skiplist",
+    href: "https://github.com/garrettladley/skiplist",
+    description: "An implementation of skiplists in Go",
+    tools: ["Go"],
+  },
+  {
     name: "pkgsite-mcp",
     href: "https://github.com/garrettladley/pkgsite-mcp",
     description: "MCP server for pkg.go.dev",
