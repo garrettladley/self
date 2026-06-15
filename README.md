@@ -8,4 +8,4 @@ corepack enable     # activates pnpm shim (reads version from packageManager in 
 pnpm install
 ```
 
-> **Note:** Run `corepack enable` once after installing Node. Corepack ships with Node and manages the pnpm version specified in `package.json`'s `packageManager` field — no need to install pnpm separately.
+> **Note:** Run `corepack enable` once after installing Node. Corepack ships with Node and manages the pnpm version specified in `package.json`'s `packageManager` field, so there is no need to install pnpm separately.

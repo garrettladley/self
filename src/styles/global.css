@@ -37,6 +37,63 @@ main a:not([data-nav-link]) {
   text-underline-offset: 0.18em;
 }
 
+.post-prose {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 5);
+  line-height: 1.75;
+}
+
+.post-prose h2,
+.post-prose h3 {
+  color: var(--color-text);
+  font-weight: 500;
+  line-height: 1.25;
+  margin-top: calc(var(--spacing) * 5);
+}
+
+.post-prose h2 {
+  font-size: 1.25rem;
+}
+
+.post-prose h3 {
+  font-size: 1.05rem;
+}
+
+.post-prose p,
+.post-prose li {
+  color: var(--color-text-soft);
+}
+
+.post-prose ul,
+.post-prose ol {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 1.5);
+  padding-left: calc(var(--spacing) * 5.5);
+}
+
+.post-prose blockquote {
+  border-left: 1px solid var(--color-border);
+  color: var(--color-text-dim);
+  margin: 0;
+  padding-left: calc(var(--spacing) * 4);
+}
+
+.post-prose pre {
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  overflow-x: auto;
+  padding: calc(var(--spacing) * 4);
+}
+
+.post-prose :not(pre) > code {
+  background: color-mix(in srgb, var(--color-border) 45%, transparent);
+  border-radius: 0.25rem;
+  color: var(--color-text);
+  padding: 0.1em 0.3em;
+}
+
 @keyframes cursor {
   0%,
   49% {

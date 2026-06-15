@@ -31,7 +31,7 @@ const commands: Command[] = [
 ];
 ---
 
-<!-- Command Palette — ⌘K / Ctrl+K -->
+<!-- Command Palette - Cmd+K / Ctrl+K -->
 <command-palette data-commands={JSON.stringify(commands)}>
   <div
     id="cmd-palette"
@@ -47,7 +47,7 @@ const commands: Command[] = [
     >
     </div>
 
-    <!-- Centering wrapper — input anchored above page center -->
+    <!-- Centering wrapper, input anchored above page center -->
     <div
       class="absolute inset-0 flex items-center justify-center pointer-events-none"
     >
@@ -70,19 +70,19 @@ const commands: Command[] = [
             class="flex-1 bg-transparent text-foreground text-chrome uppercase tracking-[0.15em] font-mono outline-none placeholder:text-foreground-dim/50"
           />
           <kbd
-            class="text-chrome text-foreground-dim border border-border px-1.5 py-0.5 tracking-[0.1em] select-none"
+            class="text-chrome text-foreground-dim border border-border px-1.5 py-0.5 tracking-widest select-none"
             >ESC</kbd
           >
         </div>
 
         <!-- Results -->
-        <div id="cmd-results" class="max-h-[320px] overflow-y-auto">
+        <div id="cmd-results" class="max-h-80 overflow-y-auto">
           <!-- Populated by JS -->
         </div>
 
         <!-- Footer -->
         <div
-          class="flex items-center justify-between border-t border-border px-4 h-8 text-chrome text-foreground-dim tracking-[0.1em] select-none"
+          class="flex items-center justify-between border-t border-border px-4 h-8 text-chrome text-foreground-dim tracking-widest select-none"
         >
           <span
             ><kbd class="border border-border px-1 py-0.5 mr-0.5">↑</kbd>
@@ -235,9 +235,9 @@ const commands: Command[] = [
     };
 
     private onClick = (e: MouseEvent) => {
-      const row = (e.target as HTMLElement).closest<HTMLElement>(
+      const row = (e.target as HTMLElement).closest(
         "[data-cmd-idx]",
-      );
+      ) as HTMLElement | null;
       if (row) {
         this.activeIdx = parseInt(row.dataset.cmdIdx!, 10);
         this.run();
@@ -245,9 +245,9 @@ const commands: Command[] = [
     };
 
     private onMouseMove = (e: MouseEvent) => {
-      const row = (e.target as HTMLElement).closest<HTMLElement>(
+      const row = (e.target as HTMLElement).closest(
         "[data-cmd-idx]",
-      );
+      ) as HTMLElement | null;
       if (row) {
         const idx = parseInt(row.dataset.cmdIdx!, 10);
         if (idx !== this.activeIdx) {
