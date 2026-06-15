@@ -7,7 +7,7 @@
   class="relative flex-1 min-h-0 overflow-hidden bg-background"
   style="cursor: crosshair;"
 >
-  <canvas id="glcanvas" class="block w-full h-full"></canvas>
+  <canvas id="glcanvas" class="block size-full"></canvas>
 
   <!-- Grid overlay -->
   <div
@@ -19,12 +19,12 @@
 
   <!-- Crosshair lines -->
   <div
-    class="pointer-events-none absolute top-1/2 left-0 right-0 h-px"
+    class="pointer-events-none absolute top-1/2 inset-x-0 h-px"
     style="background: rgba(121, 192, 255, 0.2);"
   >
   </div>
   <div
-    class="pointer-events-none absolute left-1/2 top-0 bottom-0 w-px"
+    class="pointer-events-none absolute left-1/2 inset-y-0 w-px"
     style="background: rgba(121, 192, 255, 0.2);"
   >
   </div>
@@ -274,7 +274,7 @@
 
     rafId = requestAnimationFrame(render);
 
-    // Freeze last frame (stop rAF + listeners) — keeps canvas painted for snapshot
+    // Freeze last frame (stop rAF + listeners), keeping canvas painted for snapshot
     window.__halftoneCleanup = function () {
       if (rafId) cancelAnimationFrame(rafId);
       rafId = null;

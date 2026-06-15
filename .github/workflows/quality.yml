@@ -20,7 +20,7 @@ jobs:
           node-version-file: .tool-versions
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile --strict-peer-dependencies
 
   format:
     needs: setup
@@ -36,7 +36,7 @@ jobs:
           node-version-file: .tool-versions
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile --strict-peer-dependencies
       - run: pnpm run format
 
   lint:
@@ -53,7 +53,7 @@ jobs:
           node-version-file: .tool-versions
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile --strict-peer-dependencies
 
       - name: Restore ESLint cache
         uses: actions/cache@v4
@@ -79,7 +79,7 @@ jobs:
           node-version-file: .tool-versions
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile --strict-peer-dependencies
       - run: pnpm run typecheck
 
   build:
@@ -96,7 +96,7 @@ jobs:
           node-version-file: .tool-versions
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile --strict-peer-dependencies
       - run: pnpm run build
 
       - name: Cache Chrome

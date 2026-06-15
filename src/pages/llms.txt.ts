@@ -1,10 +1,13 @@
 import type { APIRoute } from "astro";
+import { getCollection } from "astro:content";
 import { projects } from "../data/projects";
 import { library } from "../data/library";
 
 const SITE = "https://garrettladley.com";
 
-function generateLlmsTxt(): string {
+type PublishedPost = Awaited<ReturnType<typeof getCollection<"blog">>>[number];
+
+function generateLlmsTxt(posts: PublishedPost[]): string {
   const projectLines = projects
     .map((p) => {
       const prefix = p.href ? `[${p.name}](${p.href})` : `${p.name} (private)`;
@@ -15,6 +18,15 @@ function generateLlmsTxt(): string {
   const bookLines = library
     .map((year) => `- ${year.year}:\n${year.books.map((b) => `  - ${b.title}`).join("\n")}`)
     .join("\n");
+
+  const postLines =
+    posts.length > 0
+      ? posts
+          .map(
+            (post) => `- [${post.data.title}](${SITE}/blog/${post.id}/): ${post.data.description}`,
+          )
+          .join("\n")
+      : "- No published posts yet";
 
   return `# Garrett Ladley
 
@@ -34,8 +46,14 @@ Garrett Ladley is a software engineer specializing in Go and Rust. He currently 
 ## Pages
 
 - [Home](${SITE}/): Overview with role, location, and focus areas
+- [Writing](${SITE}/blog): Writing by Garrett Ladley
 - [Projects](${SITE}/projects): Open-source and personal software projects
 - [Library](${SITE}/library): Books read by year
+- [RSS](${SITE}/rss.xml): Feed for new writing
+
+## Writing
+
+${postLines}
 
 ## Projects
 
@@ -47,8 +65,12 @@ ${bookLines}
 `;
 }
 
-export const GET: APIRoute = () => {
-  return new Response(generateLlmsTxt(), {
+export const GET: APIRoute = async () => {
+  const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime(),
+  );
+
+  return new Response(generateLlmsTxt(posts), {
     headers: { "Content-Type": "text/plain; charset=utf-8" },
   });
 };

@@ -25,6 +25,7 @@ const {
 
 const canonical = new URL(Astro.url.pathname, SITE);
 const ogImageUrl = new URL(ogImage, SITE).href;
+const rssUrl = new URL("/rss.xml", SITE);
 ---
 
 <!doctype html>
@@ -58,6 +59,12 @@ const ogImageUrl = new URL(ogImage, SITE).href;
 
     <link rel="canonical" href={canonical.href} />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Garrett Ladley"
+      href={rssUrl.href}
+    />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link

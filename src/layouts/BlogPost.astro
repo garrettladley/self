@@ -1,0 +1,80 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  tags: string[];
+}
+
+const { title, description, pubDate, updatedDate, tags } = Astro.props;
+
+const SITE = "https://garrettladley.com";
+const canonical = new URL(Astro.url.pathname, SITE);
+const formatter = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+});
+
+const formatDate = (date: Date) => formatter.format(date);
+---
+
+<BaseLayout title={`${title} - Garrett Ladley`} description={description}>
+  <main
+    class="mx-auto w-full max-w-184 px-page-x pt-[calc(60px+var(--page-padding-block))] pb-[calc(60px+var(--page-padding-block))] flex-1"
+  >
+    <article class="flex flex-col">
+      <header class="mb-10">
+        <div
+          class="mb-4 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-meta uppercase tracking-[0.04em] text-foreground-dim"
+        >
+          <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+          {
+            updatedDate && (
+              <span>
+                updated{" "}
+                <time datetime={updatedDate.toISOString()}>
+                  {formatDate(updatedDate)}
+                </time>
+              </span>
+            )
+          }
+          {tags.map((tag) => <span class="text-foreground-muted">#{tag}</span>)}
+        </div>
+        <h1 class="font-mono text-heading font-medium text-foreground">
+          {title}
+        </h1>
+        <p class="mt-5 max-w-152 text-body text-foreground-soft">
+          {description}
+        </p>
+      </header>
+
+      <div class="post-prose text-body text-foreground-soft">
+        <slot />
+      </div>
+    </article>
+  </main>
+
+  <script
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: title,
+      description,
+      url: canonical.href,
+      datePublished: pubDate.toISOString(),
+      ...(updatedDate && { dateModified: updatedDate.toISOString() }),
+      author: {
+        "@type": "Person",
+        name: "Garrett Ladley",
+        url: SITE,
+      },
+      keywords: tags,
+    })}
+  />
+</BaseLayout>
