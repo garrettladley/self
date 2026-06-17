@@ -38,3 +38,19 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
     <p><a class="link-quiet" href="/rss.xml">RSS</a></p>
   </main>
 </BaseLayout>
+
+<script is:inline>
+  function handleRssClick() {
+    window.posthog?.capture("rss_feed_clicked");
+  }
+
+  function setupRssLink() {
+    const rssLink = document.querySelector('a[href="/rss.xml"]');
+    if (!rssLink) return;
+    rssLink.removeEventListener("click", handleRssClick);
+    rssLink.addEventListener("click", handleRssClick);
+  }
+
+  document.addEventListener("DOMContentLoaded", setupRssLink);
+  document.addEventListener("astro:page-load", setupRssLink);
+</script>

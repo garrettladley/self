@@ -64,4 +64,11 @@ const canonical = new URL(Astro.url.pathname, SITE_URL);
       keywords: tags,
     })}
   />
+
+  <script is:inline define:vars={{ postTitle: title, postTags: tags }}>
+    window.posthog?.capture("blog_post_viewed", {
+      title: postTitle,
+      tags: postTags,
+    });
+  </script>
 </BaseLayout>
