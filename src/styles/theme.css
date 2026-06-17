@@ -1,56 +1,40 @@
-@font-face {
-  font-family: "Lilex";
-  font-style: normal;
-  font-display: block;
-  font-weight: 400;
-  src: url("/fonts/lilex-latin-400-normal.woff2") format("woff2");
-}
+/*
+ * A plain-text document. One monospace family, one accent. Light only.
+ *
+ * Tailwind v4 is configured CSS-first: tokens declared in `@theme` are emitted
+ * as `:root` custom properties *and* registered as utilities, so a color like
+ * `--color-foreground-soft` is usable as `text-foreground-soft`, the font as
+ * `font-mono`, and the document measure as `max-w-doc`.
+ */
 
-@property --color-bg {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: #2a334f;
-}
-@property --color-text {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: #ffffff;
-}
-@property --color-text-soft {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: #dfe0e4;
-}
-@property --color-text-dim {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: #a9adb8;
-}
-@property --color-accent {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: #79c0ff;
-}
-@property --color-border {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: #3f4760;
-}
-
-:root {
-  --color-bg: #2a334f;
-  --color-text: #ffffff;
-  --color-text-soft: #dfe0e4;
-  --color-text-dim: #a9adb8;
-
-  --color-accent: #79c0ff;
-  --color-border: #3f4760;
+@theme {
+  --color-background: #f5f4ef;
+  --color-foreground: #1b1a17;
+  --color-foreground-soft: #45433d;
+  --color-foreground-dim: #97928a;
+  --color-accent: #4b46c2;
+  --color-surface: #ecebe4;
+  --color-border: #e0ddd3;
 
   --font-mono:
-    "Lilex", "ZedMonoExtended", "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
+    "Lilex", "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
-  --page-width: 70rem;
-  --page-padding-inline: clamp(1.75rem, 6vw, 4rem);
-  --page-padding-block: clamp(2rem, 6vw, 3.8rem);
+  /* The single document measure, centered on every page (see .doc). */
+  --container-doc: 42rem;
+
+  /* Recurring small type sizes (utilities: text-meta / text-wordmark). */
+  --text-meta: 13px;
+  --text-wordmark: 1.0625rem;
+}
+
+/* Non-tokenized custom properties: fluid document padding and the accent-tinted
+   selection. These aren't meant to be utilities, so they live outside @theme. */
+:root {
+  --color-selection: rgb(75 70 194 / 0.14);
+
+  --doc-pad-inline: clamp(1.5rem, 6vw, 2.5rem);
+  --doc-pad-top: clamp(3.5rem, 14vh, 7rem);
+  --doc-pad-bottom: clamp(3rem, 10vh, 5rem);
+
+  color-scheme: light;
 }

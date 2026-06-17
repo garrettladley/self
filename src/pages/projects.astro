@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeader from "../components/PageHeader.astro";
 import { projects } from "../data/projects";
+import { SITE_URL, AUTHOR } from "../consts";
 
 const withProjectTracking = (href: string) => {
   const url = new URL(href);
@@ -15,50 +17,43 @@ const withProjectTracking = (href: string) => {
   title="Projects - Garrett Ladley"
   description="Active projects by Garrett Ladley."
 >
-  <main
-    class="mx-auto w-full max-w-page px-page-x pt-[calc(60px+var(--page-padding-block))] pb-[calc(60px+var(--page-padding-block))] flex-1 flex flex-col justify-center"
-  >
-    <h1 class="sr-only">Projects</h1>
-    <div
-      class="flex flex-col w-full font-mono text-body tracking-[0.04em] uppercase gap-1"
-    >
+  <main class="doc flow">
+    <PageHeader title="Projects" />
+
+    <ul class="space-y-[0.9em]">
       {
         projects.map((project) => (
-          <div class="grid grid-cols-[clamp(160px,24vw,280px)_1fr] gap-8 py-5 border-b border-white/4 last:border-b-0">
-            <div class="flex justify-between pr-4 text-foreground-muted">
+          <li>
+            {project.href ? (
+              <a
+                class="link"
+                href={withProjectTracking(project.href)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {project.name}
+              </a>
+            ) : (
               <span>
-                {project.href ? (
-                  <a
-                    href={withProjectTracking(project.href)}
-                    target="_blank"
-                    rel="noreferrer"
-                    class="transition-colors duration-200 hover:text-accent"
-                  >
-                    {project.name}
-                  </a>
-                ) : (
-                  project.name
-                )}
+                {project.name}
                 {project.private && (
-                  <span class="text-foreground-dim text-meta"> (private)</span>
+                  <span class="text-foreground-dim"> (private)</span>
                 )}
               </span>
-              <span class="text-foreground-dim">&gt;</span>
-            </div>
-            <div class="truncate">
-              {project.description}
-              {project.tools.length > 0 && (
-                <span class="text-foreground-dim text-meta">
-                  {" "}
-                  · {project.tools.join(" · ")}
-                </span>
-              )}
-            </div>
-          </div>
+            )}
+            <span class="text-foreground-soft"> — {project.description}</span>
+            {project.tools.length > 0 && (
+              <span class="text-foreground-dim">
+                {" "}
+                · {project.tools.join(", ")}
+              </span>
+            )}
+          </li>
         ))
       }
-    </div>
+    </ul>
   </main>
+
   <script
     is:inline
     type="application/ld+json"
@@ -76,8 +71,8 @@ const withProjectTracking = (href: string) => {
           programmingLanguage: project.tools,
           author: {
             "@type": "Person",
-            name: "Garrett Ladley",
-            url: "https://garrettladley.com",
+            name: AUTHOR,
+            url: SITE_URL,
           },
         },
       })),

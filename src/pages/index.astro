@@ -1,12 +1,56 @@
 ---
-import HalftoneCanvas from "../components/HalftoneCanvas.astro";
-import InfoPanels from "../components/InfoPanels.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeader from "../components/PageHeader.astro";
+
+const nav = [
+  { label: "Writing", href: "/blog" },
+  { label: "Projects", href: "/projects" },
+  { label: "Library", href: "/library" },
+];
+
+const elsewhere = [
+  { label: "GitHub", href: "https://github.com/garrettladley" },
+  { label: "X", href: "https://x.com/garrettladley" },
+  { label: "LinkedIn", href: "https://linkedin.com/in/garrett-ladley" },
+];
 ---
 
 <BaseLayout>
-  <main class="flex flex-col h-dvh pt-10 pb-15">
-    <HalftoneCanvas />
-    <InfoPanels />
+  <main class="doc flow">
+    <PageHeader>
+      <p class="text-foreground-soft">Member of Technical Staff at Agency AI</p>
+      <p class="text-foreground-dim">New York</p>
+    </PageHeader>
+
+    <p class="max-w-[58ch] text-foreground-soft">
+      I work on products and distributed systems. <br /> Massive Go fan.
+    </p>
+
+    <nav aria-label="Sections">
+      <ul class="flex flex-col gap-[0.35em]">
+        {
+          nav.map((n) => (
+            <li>
+              <a class="link" href={n.href}>
+                {n.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <nav
+      aria-label="Elsewhere"
+      class="flex flex-wrap gap-x-[1.25em] gap-y-[0.25em]"
+    >
+      {
+        elsewhere.map((e) => (
+          <a class="link-quiet" href={e.href} target="_blank" rel="noreferrer">
+            {e.label}
+          </a>
+        ))
+      }
+    </nav>
   </main>
 </BaseLayout>

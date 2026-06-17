@@ -1,116 +1,236 @@
-@config "../../tailwind.config.ts";
-@import "./theme.css";
 @import "tailwindcss";
+@import "./theme.css";
 
-:root {
-  color-scheme: dark;
+/* Lilex — the single family. Only the weights we actually set (400 body, 500
+   for the wordmark and emphasis). No italics: the site never sets italic type. */
+@font-face {
+  font-family: "Lilex";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url("/fonts/lilex-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Lilex";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src: url("/fonts/lilex-latin-500-normal.woff2") format("woff2");
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+/* Tailwind's Preflight (loaded by `@import "tailwindcss"`) handles the reset —
+   box-sizing, zeroed margins, unstyled lists. We only add what it leaves open. */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  html,
+  body {
+    min-height: 100%;
+  }
+
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-mono);
+    font-size: 15px;
+    line-height: 1.65;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--color-selection);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
 }
 
-html,
-body {
-  min-height: 100%;
+/* ------------------------------------------------------------------ */
+/*  Reused primitives. The page is a quiet frame; the person is signal. */
+/* ------------------------------------------------------------------ */
+
+@layer components {
+  /* The document column — one measure, centered, on every page. */
+  .doc {
+    @apply mx-auto w-full max-w-doc;
+    padding: var(--doc-pad-top) var(--doc-pad-inline) var(--doc-pad-bottom);
+  }
+
+  /* Vertical rhythm: blocks breathe. The masthead (PageHeader) carries the same
+     bottom margin so the gap to the page body is identical everywhere. */
+  .flow > * + * {
+    margin-top: 2.4em;
+  }
+
+  /* Resting page is near-monochrome; interaction reveals the accent. */
+  .link {
+    @apply text-foreground no-underline transition-colors duration-150;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+  .link:hover {
+    @apply text-accent underline;
+  }
+
+  /* Quieter sibling — set in dim, one accent on hover. */
+  .link-quiet {
+    @apply text-foreground-dim no-underline;
+    text-underline-offset: 0.2em;
+  }
+  .link-quiet:hover {
+    @apply text-accent underline;
+  }
 }
 
-body {
-  margin: 0;
-  letter-spacing: 0.01em;
+/* ------------------------------------------------------------------ */
+/*  Long-form MDX prose (blog posts). Styles generated markup, so it      */
+/*  stays as CSS — utilities can't reach content authored in MDX.         */
+/* ------------------------------------------------------------------ */
+
+.prose {
+  color: var(--color-foreground-soft);
+  line-height: 1.72;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-  transition: color 0.15s ease;
+.prose > * + * {
+  margin-top: 1.3em;
 }
 
-a:hover {
+.prose h2,
+.prose h3 {
+  color: var(--color-foreground);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  font-size: 1rem;
+  margin-top: 2.4em;
+}
+.prose h3 {
+  font-size: 0.95rem;
+}
+.prose h2 + *,
+.prose h3 + * {
+  margin-top: 0.6em;
+}
+
+.prose a {
   color: var(--color-accent);
-}
-
-main a:not([data-nav-link]) {
   text-decoration: underline;
   text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
 }
 
-.post-prose {
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--spacing) * 5);
-  line-height: 1.75;
-}
-
-.post-prose h2,
-.post-prose h3 {
-  color: var(--color-text);
+.prose strong {
+  color: var(--color-foreground);
   font-weight: 500;
-  line-height: 1.25;
-  margin-top: calc(var(--spacing) * 5);
+}
+/* Emphasis without italics — the site never sets italic type. */
+.prose em {
+  font-style: normal;
+  color: var(--color-foreground);
 }
 
-.post-prose h2 {
-  font-size: 1.25rem;
-}
-
-.post-prose h3 {
-  font-size: 1.05rem;
-}
-
-.post-prose p,
-.post-prose li {
-  color: var(--color-text-soft);
-}
-
-.post-prose ul,
-.post-prose ol {
+.prose ul,
+.prose ol {
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing) * 1.5);
-  padding-left: calc(var(--spacing) * 5.5);
+  gap: 0.35em;
+}
+.prose ul {
+  list-style: none;
+  padding-left: 0;
+}
+.prose ul > li {
+  padding-left: 2ch;
+  text-indent: -2ch;
+}
+.prose ul > li::before {
+  content: "– ";
+  color: var(--color-foreground-dim);
+}
+.prose ol {
+  list-style: decimal;
+  padding-left: 2.5ch;
+}
+.prose ol > li::marker {
+  color: var(--color-foreground-dim);
 }
 
-.post-prose blockquote {
-  border-left: 1px solid var(--color-border);
-  color: var(--color-text-dim);
+.prose blockquote {
   margin: 0;
-  padding-left: calc(var(--spacing) * 4);
+  padding-left: 2ch;
+  border-left: 2px solid var(--color-border);
+  color: var(--color-foreground-dim);
 }
 
-.post-prose pre {
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  margin: 2.4em 0;
+}
+
+.prose :not(pre) > code {
+  font-size: 0.9em;
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 0.375rem;
+  border-radius: 3px;
+  padding: 0.05em 0.35em;
+  color: var(--color-foreground);
+}
+
+.prose pre {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 0.9rem 1.05rem;
   overflow-x: auto;
-  padding: calc(var(--spacing) * 4);
+  font-size: 0.84rem;
+  line-height: 1.65;
+}
+.prose pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
 }
 
-.post-prose :not(pre) > code {
-  background: color-mix(in srgb, var(--color-border) 45%, transparent);
-  border-radius: 0.25rem;
-  color: var(--color-text);
-  padding: 0.1em 0.3em;
+/* Syntax colors from Shiki; the panel surface stays ours. */
+.prose .astro-code,
+.prose .astro-code span {
+  color: var(--shiki-light);
+  font-style: normal;
 }
 
-@keyframes cursor {
-  0%,
-  49% {
-    opacity: 1;
-  }
-  50%,
-  100% {
-    opacity: 0;
-  }
+.prose img,
+.prose video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
 }
 
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.3;
-  }
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  display: block;
+  overflow-x: auto;
+}
+.prose th,
+.prose td {
+  border: 1px solid var(--color-border);
+  padding: 0.4em 0.7em;
+  text-align: left;
+}
+.prose th {
+  color: var(--color-foreground);
+  font-weight: 500;
 }

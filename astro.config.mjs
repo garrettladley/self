@@ -12,6 +12,18 @@ export default defineConfig({
   output: "static",
   adapter: vercel(),
   integrations: [sitemap(), mdx()],
+  markdown: {
+    shikiConfig: {
+      // Light-only site: github-light colors on our own surface panel.
+      // defaultColor:false emits the color as a CSS var so our surface bg wins.
+      themes: {
+        light: "github-light",
+        dark: "github-light",
+      },
+      defaultColor: false,
+      wrap: true,
+    },
+  },
   prefetch: {
     prefetchAll: true,
   },

@@ -2,8 +2,7 @@ import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
 import { projects } from "../data/projects";
 import { library } from "../data/library";
-
-const SITE = "https://garrettladley.com";
+import { SITE_URL as SITE } from "../consts";
 
 type PublishedPost = Awaited<ReturnType<typeof getCollection<"blog">>>[number];
 

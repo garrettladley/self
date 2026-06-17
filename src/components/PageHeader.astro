@@ -1,0 +1,45 @@
+---
+/**
+ * The masthead shared by every page: the wordmark, then — on inner pages — the
+ * page's own heading, then whatever supporting lines a page passes as children.
+ *
+ * The wordmark is identical everywhere so it never shifts under you, and a
+ * single blank line of breathing room always sits beneath it. The header itself
+ * carries the `.flow` rhythm as bottom margin so the gap to the page body is
+ * identical everywhere.
+ *
+ *   - Home page:    omit `title`; the wordmark itself is the <h1>, and the bio
+ *                   lines come through the slot.
+ *   - List pages:   pass `title` (e.g. "Projects"); it renders as a quiet
+ *                   secondary <h1>.
+ *   - Blog posts:   pass `title` plus `article`; the title carries the weight,
+ *                   with meta/description coming through the slot.
+ */
+interface Props {
+  title?: string;
+  article?: boolean;
+}
+
+const { title, article = false } = Astro.props;
+const isHome = title === undefined;
+
+const wordmark =
+  "block mb-[1.6em] text-wordmark font-medium tracking-[-0.01em] text-foreground";
+const titleClass = article
+  ? "text-wordmark font-medium tracking-[-0.01em] text-foreground"
+  : "text-[15px] font-normal text-foreground-dim";
+---
+
+<header class="mb-[2.4em]">
+  {
+    isHome ? (
+      <h1 class={wordmark}>Garrett Ladley</h1>
+    ) : (
+      <a class:list={[wordmark, "no-underline hover:text-accent"]} href="/">
+        Garrett Ladley
+      </a>
+    )
+  }
+  {title && <h1 class={titleClass}>{title}</h1>}
+  <slot />
+</header>

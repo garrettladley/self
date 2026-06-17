@@ -3,9 +3,7 @@ import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
 import SpeedInsights from "@vercel/speed-insights/astro";
 import Analytics from "@vercel/analytics/astro";
-import SiteHeader from "../components/SiteHeader.astro";
-import SiteFooter from "../components/SiteFooter.astro";
-import CommandPalette from "../components/CommandPalette.astro";
+import { SITE_URL, AUTHOR } from "../consts";
 
 interface Props {
   title?: string;
@@ -14,18 +12,16 @@ interface Props {
   noIndex?: boolean;
 }
 
-const SITE = "https://garrettladley.com";
-
 const {
-  title = "Garrett Ladley",
+  title = AUTHOR,
   description = "Garrett Ladley, Member of Technical Staff at Agency AI.",
   ogImage = "/og.png",
   noIndex = false,
 } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname, SITE);
-const ogImageUrl = new URL(ogImage, SITE).href;
-const rssUrl = new URL("/rss.xml", SITE);
+const canonical = new URL(Astro.url.pathname, SITE_URL);
+const ogImageUrl = new URL(ogImage, SITE_URL).href;
+const rssUrl = new URL("/rss.xml", SITE_URL);
 ---
 
 <!doctype html>
@@ -74,7 +70,7 @@ const rssUrl = new URL("/rss.xml", SITE);
       type="font/woff2"
       crossorigin
     />
-    <meta name="theme-color" content="#2a334f" />
+    <meta name="theme-color" content="#f5f4ef" />
     {noIndex && <meta name="robots" content="noindex" />}
     <title>{title}</title>
     <ClientRouter fallback="swap" />
@@ -88,8 +84,8 @@ const rssUrl = new URL("/rss.xml", SITE);
         "@type": "ProfilePage",
         mainEntity: {
           "@type": "Person",
-          name: "Garrett Ladley",
-          url: SITE,
+          name: AUTHOR,
+          url: SITE_URL,
           description:
             "Software engineer specializing in Go and Rust, passionate about building products, backend development, and distributed systems. Member of Technical Staff at Agency AI in New York City.",
           jobTitle: "Member of Technical Staff",
@@ -125,13 +121,8 @@ const rssUrl = new URL("/rss.xml", SITE);
       })}
     />
   </head>
-  <body class="min-h-dvh bg-background text-foreground font-mono antialiased">
-    <div class="min-h-dvh flex flex-col">
-      <SiteHeader currentPath={Astro.url.pathname} />
-      <slot />
-      <SiteFooter />
-    </div>
-    <CommandPalette />
+  <body>
+    <slot />
     <SpeedInsights />
     <Analytics />
   </body>

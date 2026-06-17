@@ -1,8 +1,8 @@
 import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
 import type { APIContext } from "astro";
+import { SITE_URL } from "../consts";
 
-const SITE = "https://garrettladley.com";
 const FEED_PATH = "/rss.xml";
 
 export async function GET(context: APIContext) {
@@ -10,7 +10,7 @@ export async function GET(context: APIContext) {
     (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime(),
   );
 
-  const site = context.site ?? new URL(SITE);
+  const site = context.site ?? new URL(SITE_URL);
   const feedUrl = new URL(FEED_PATH, site).href;
   const lastBuildDate = posts.reduce<Date | undefined>((latest, post) => {
     const postBuildDate = post.data.updatedDate ?? post.data.pubDate;
