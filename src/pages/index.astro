@@ -54,3 +54,25 @@ const elsewhere = [
     </nav>
   </main>
 </BaseLayout>
+
+<script is:inline>
+  function handleElsewhereClick(e) {
+    const link = e.currentTarget;
+    window.posthog?.capture("external_link_clicked", {
+      label: link.textContent?.trim(),
+      href: link.getAttribute("href"),
+    });
+  }
+
+  function setupElsewhereLinks() {
+    const nav = document.querySelector('nav[aria-label="Elsewhere"]');
+    if (!nav) return;
+    nav.querySelectorAll("a").forEach(function (link) {
+      link.removeEventListener("click", handleElsewhereClick);
+      link.addEventListener("click", handleElsewhereClick);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", setupElsewhereLinks);
+  document.addEventListener("astro:page-load", setupElsewhereLinks);
+</script>

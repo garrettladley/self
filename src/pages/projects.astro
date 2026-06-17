@@ -79,3 +79,23 @@ const withProjectTracking = (href: string) => {
     })}
   />
 </BaseLayout>
+
+<script is:inline>
+  function handleProjectClick(e) {
+    const link = e.currentTarget;
+    window.posthog?.capture("project_link_clicked", {
+      project_name: link.textContent?.trim(),
+      href: link.getAttribute("href"),
+    });
+  }
+
+  function setupProjectLinks() {
+    document.querySelectorAll('ul a[target="_blank"]').forEach(function (link) {
+      link.removeEventListener("click", handleProjectClick);
+      link.addEventListener("click", handleProjectClick);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", setupProjectLinks);
+  document.addEventListener("astro:page-load", setupProjectLinks);
+</script>
