@@ -1,17 +1,12 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import FileAbduction from "../components/FileAbduction.astro";
+import PageHeader from "../components/PageHeader.astro";
 ---
 
-<BaseLayout title="404" description="Page not found" noIndex>
-  <main
-    class="mx-auto min-h-dvh w-full max-w-page px-page-x pt-[calc(60px+var(--page-padding-block))] pb-page-y text-error-body leading-[1.6]"
-  >
-    <div class="space-y-5">
-      <h1 class="text-error-heading uppercase tracking-[0.12em]">ERROR: 404</h1>
-      <p class="text-foreground-muted">THIS ROUTE DOES NOT EXIST.</p>
-      <FileAbduction class="size-24 text-foreground-muted" />
-      <p><a href="/">RETURN HOME</a></p>
-    </div>
+<BaseLayout title="404 - Garrett Ladley" description="Page not found" noIndex>
+  <main class="doc flow">
+    <PageHeader title="404" />
+
+    <p class="text-foreground-soft">That page doesn't exist.</p>
   </main>
 </BaseLayout>
