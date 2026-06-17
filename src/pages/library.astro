@@ -11,11 +11,20 @@ import { library } from "../data/library";
   <main class="doc flow">
     <PageHeader title="Library" />
 
-    <div class="flex flex-col gap-[1.9em]">
+    {
+      /* A reading ledger: the year sits in a right-aligned gutter and titles hang
+        off a shared spine. Hairline rules separate the years. */
+    }
+    <div>
       {
-        library.map((yearGroup) => (
-          <section>
-            <p class="mb-[0.4em] text-foreground-dim">{yearGroup.year}</p>
+        library.map((yearGroup, i) => (
+          <section
+            class:list={[
+              "grid grid-cols-[2.75rem_1fr] gap-x-[1.5em] sm:grid-cols-[3.5rem_1fr] sm:gap-x-[2em]",
+              i > 0 && "mt-[1.9em] border-t border-border pt-[1.9em]",
+            ]}
+          >
+            <p class="text-foreground">{yearGroup.year}</p>
             <ul class="flex flex-col gap-[0.2em]">
               {yearGroup.books.map((book) => (
                 <li class="text-foreground-soft">{book.title}</li>

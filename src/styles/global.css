@@ -23,6 +23,10 @@
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
+    /* Reserve the scrollbar gutter on every page so the centered document
+       column never shifts left/right between a short page (no scrollbar) and a
+       long one (scrollbar present). */
+    scrollbar-gutter: stable;
   }
 
   html,
