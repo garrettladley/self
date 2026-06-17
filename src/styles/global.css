@@ -51,9 +51,9 @@
   }
 }
 
-/* ------------------------------------------------------------------ */
+/* -------------------------------------------------------------------- */
 /*  Reused primitives. The page is a quiet frame; the person is signal. */
-/* ------------------------------------------------------------------ */
+/* -------------------------------------------------------------------- */
 
 @layer components {
   /* The document column — one measure, centered, on every page. */
@@ -89,8 +89,8 @@
 }
 
 /* ------------------------------------------------------------------ */
-/*  Long-form MDX prose (blog posts). Styles generated markup, so it      */
-/*  stays as CSS — utilities can't reach content authored in MDX.         */
+/*  Long-form MDX prose (blog posts). Styles generated markup, so it  */
+/*  stays as CSS — utilities can't reach content authored in MDX.      */
 /* ------------------------------------------------------------------ */
 
 .prose {
