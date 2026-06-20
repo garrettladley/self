@@ -7,11 +7,12 @@ export type LibraryYear = {
   books: Book[];
 };
 
-// years and books are ordered reverse chronologically (most recent first)
+// years and books are ordered reverse chronologically
 export const library: LibraryYear[] = [
   {
     year: 2026,
     books: [
+      { title: "Turn the Ship Around!" },
       { title: "Thinking, Fast and Slow" },
       { title: "Database Internals" },
       { title: "Bullshit Jobs" },
