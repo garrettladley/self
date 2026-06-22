@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import vercel from "@astrojs/vercel";
+import { cacheVercel } from "@astrojs/vercel/cache";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 
@@ -11,6 +12,12 @@ export default defineConfig({
   site: "https://garrettladley.com",
   output: "static",
   adapter: vercel(),
+  cache: {
+    // Experimental in Astro 7: push caching directives to Vercel's edge
+    // network so cache hits are served from the CDN without invoking the
+    // server function. Enabled automatically in a future release.
+    provider: cacheVercel(),
+  },
   integrations: [sitemap(), mdx()],
   markdown: {
     shikiConfig: {
