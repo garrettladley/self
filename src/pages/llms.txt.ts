@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
 import { projects } from "../data/projects";
 import { library } from "../data/library";
-import { SITE_URL as SITE } from "../consts";
+import { SITE_URL as SITE, SOCIAL_PROFILES } from "../consts";
 
 type PublishedPost = Awaited<ReturnType<typeof getCollection<"blog">>>[number];
 
@@ -38,9 +38,9 @@ Garrett Ladley is a software engineer specializing in Go and Rust. He currently 
 ## Links
 
 - Website: ${SITE}
-- GitHub: https://github.com/garrettladley
-- LinkedIn: https://linkedin.com/in/garrett-ladley
-- X: https://x.com/garrettladley
+- GitHub: ${SOCIAL_PROFILES.github.url}
+- LinkedIn: ${SOCIAL_PROFILES.linkedin.url}
+- X: ${SOCIAL_PROFILES.x.url}
 
 ## Pages
 

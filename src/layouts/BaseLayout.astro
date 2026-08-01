@@ -2,7 +2,7 @@
 import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
 import PostHog from "../components/PostHog.astro";
-import { SITE_URL, AUTHOR } from "../consts";
+import { SITE_URL, AUTHOR, SOCIAL_PROFILES } from "../consts";
 
 interface Props {
   title?: string;
@@ -33,12 +33,12 @@ const shouldLoadPostHog =
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="author" content="Garrett Ladley" />
+    <meta name="author" content={AUTHOR} />
     <meta name="generator" content={Astro.generator} />
 
     {/* Open Graph */}
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Garrett Ladley" />
+    <meta property="og:site_name" content={AUTHOR} />
     <meta property="og:locale" content="en_US" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -50,8 +50,8 @@ const shouldLoadPostHog =
 
     {/* Twitter / X */}
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@GarrettLadley" />
-    <meta name="twitter:creator" content="@GarrettLadley" />
+    <meta name="twitter:site" content={SOCIAL_PROFILES.x.handle} />
+    <meta name="twitter:creator" content={SOCIAL_PROFILES.x.handle} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
@@ -61,7 +61,7 @@ const shouldLoadPostHog =
     <link
       rel="alternate"
       type="application/rss+xml"
-      title="Garrett Ladley"
+      title={AUTHOR}
       href={rssUrl.href}
     />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
@@ -116,11 +116,7 @@ const shouldLoadPostHog =
               name: "Hong Kong International School",
             },
           ],
-          sameAs: [
-            "https://github.com/garrettladley",
-            "https://x.com/garrettladley",
-            "https://linkedin.com/in/garrett-ladley",
-          ],
+          sameAs: Object.values(SOCIAL_PROFILES).map((profile) => profile.url),
         },
       })}
     />

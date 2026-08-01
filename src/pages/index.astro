@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHeader from "../components/PageHeader.astro";
+import { SOCIAL_PROFILES } from "../consts";
 
 const nav = [
   { label: "Writing", href: "/blog" },
@@ -8,11 +9,7 @@ const nav = [
   { label: "Library", href: "/library" },
 ];
 
-const elsewhere = [
-  { label: "GitHub", href: "https://github.com/garrettladley" },
-  { label: "X", href: "https://x.com/garrettladley" },
-  { label: "LinkedIn", href: "https://linkedin.com/in/garrett-ladley" },
-];
+const elsewhere = Object.values(SOCIAL_PROFILES);
 ---
 
 <BaseLayout>
@@ -46,7 +43,7 @@ const elsewhere = [
     >
       {
         elsewhere.map((e) => (
-          <a class="link-quiet" href={e.href} target="_blank" rel="noreferrer">
+          <a class="link-quiet" href={e.url} target="_blank" rel="noreferrer">
             {e.label}
           </a>
         ))
