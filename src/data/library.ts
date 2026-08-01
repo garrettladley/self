@@ -12,6 +12,7 @@ export const library: LibraryYear[] = [
   {
     year: 2026,
     books: [
+      { title: "The Score Takes Care of Itself" },
       { title: "The Little Prince" },
       { title: "Turn the Ship Around!" },
       { title: "Thinking, Fast and Slow" },
