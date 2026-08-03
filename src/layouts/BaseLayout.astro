@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
+import { PUBLIC_POSTHOG_PROJECT_TOKEN } from "astro:env/client";
 import PostHog from "../components/PostHog.astro";
 import { SITE_URL, AUTHOR, SOCIAL_PROFILES } from "../consts";
 
@@ -22,9 +23,7 @@ const canonical = new URL(Astro.url.pathname, SITE_URL);
 const ogImageUrl = new URL(ogImage, SITE_URL).href;
 const rssUrl = new URL("/rss.xml", SITE_URL);
 const shouldLoadPostHog =
-  import.meta.env.PROD &&
-  typeof import.meta.env.PUBLIC_POSTHOG_PROJECT_TOKEN === "string" &&
-  import.meta.env.PUBLIC_POSTHOG_PROJECT_TOKEN.length > 0;
+  import.meta.env.PROD && Boolean(PUBLIC_POSTHOG_PROJECT_TOKEN);
 ---
 
 <!doctype html>

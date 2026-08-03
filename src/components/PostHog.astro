@@ -1,8 +1,15 @@
+---
+import {
+  PUBLIC_POSTHOG_HOST,
+  PUBLIC_POSTHOG_PROJECT_TOKEN,
+} from "astro:env/client";
+---
+
 <script
   is:inline
   define:vars={{
-    apiKey: import.meta.env.PUBLIC_POSTHOG_PROJECT_TOKEN,
-    apiHost: import.meta.env.PUBLIC_POSTHOG_HOST,
+    apiKey: PUBLIC_POSTHOG_PROJECT_TOKEN,
+    apiHost: PUBLIC_POSTHOG_HOST,
   }}
 >
   if (!window.__posthog_initialized) {
