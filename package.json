@@ -4,17 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "typecheck": "astro check --minimumFailingSeverity warning",
+    "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "typecheck": "ASTRO_TELEMETRY_DISABLED=1 astro check --minimumFailingSeverity warning",
     "lint": "eslint . --cache --max-warnings 0",
     "lint:fix": "eslint . --fix --cache",
     "a11y": "axe $(find src/pages -name '*.astro' | sed 's|src/pages/index.astro|http://localhost:4321|;s|src/pages/\\(.*\\)\\.astro|http://localhost:4321/\\1|;s|/index$||' | grep -v '\\[') --exit",
     "format": "oxfmt --check . && prettier --check \"src/**/*.{astro,mdx}\"",
     "format:fix": "oxfmt --write . && prettier --write \"src/**/*.{astro,mdx}\"",
-    "vercel:bootstrap": "bash ./scripts/vercel-bootstrap.sh",
-    "preview": "astro preview",
-    "astro": "astro"
+    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
+    "astro": "ASTRO_TELEMETRY_DISABLED=1 astro"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.0",
