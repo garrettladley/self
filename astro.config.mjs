@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from "astro/config";
+import { defineConfig, envField } from "astro/config";
 import vercel from "@astrojs/vercel";
 import { cacheVercel } from "@astrojs/vercel/cache";
 import tailwindcss from "@tailwindcss/vite";
@@ -19,6 +19,20 @@ export default defineConfig({
     provider: cacheVercel(),
   },
   integrations: [sitemap(), mdx()],
+  env: {
+    schema: {
+      PUBLIC_POSTHOG_PROJECT_TOKEN: envField.string({
+        context: "client",
+        access: "public",
+        optional: true,
+      }),
+      PUBLIC_POSTHOG_HOST: envField.string({
+        context: "client",
+        access: "public",
+        optional: true,
+      }),
+    },
+  },
   markdown: {
     shikiConfig: {
       // Light-only site: github-light colors on our own surface panel.

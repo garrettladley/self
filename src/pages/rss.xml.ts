@@ -1,14 +1,12 @@
 import rss from "@astrojs/rss";
-import { getCollection } from "astro:content";
 import type { APIContext } from "astro";
 import { SITE_URL } from "../consts";
+import { getBlogPosts } from "../data/blog";
 
 const FEED_PATH = "/rss.xml";
 
 export async function GET(context: APIContext) {
-  const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
-    (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime(),
-  );
+  const posts = await getBlogPosts();
 
   const site = context.site ?? new URL(SITE_URL);
   const feedUrl = new URL(FEED_PATH, site).href;

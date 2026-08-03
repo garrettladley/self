@@ -1,12 +1,10 @@
 import type { APIRoute } from "astro";
-import { getCollection } from "astro:content";
 import { projects } from "../data/projects";
 import { library } from "../data/library";
 import { SITE_URL as SITE, SOCIAL_PROFILES } from "../consts";
+import { getBlogPosts, type BlogPost } from "../data/blog";
 
-type PublishedPost = Awaited<ReturnType<typeof getCollection<"blog">>>[number];
-
-function generateLlmsTxt(posts: PublishedPost[]): string {
+function generateLlmsTxt(posts: BlogPost[]): string {
   const projectLines = projects
     .map((p) => {
       const prefix = p.href ? `[${p.name}](${p.href})` : `${p.name} (private)`;
@@ -65,9 +63,7 @@ ${bookLines}
 }
 
 export const GET: APIRoute = async () => {
-  const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
-    (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime(),
-  );
+  const posts = await getBlogPosts();
 
   return new Response(generateLlmsTxt(posts), {
     headers: { "Content-Type": "text/plain; charset=utf-8" },
