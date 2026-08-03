@@ -23,9 +23,7 @@ const canonical = new URL(Astro.url.pathname, SITE_URL);
 const ogImageUrl = new URL(ogImage, SITE_URL).href;
 const rssUrl = new URL("/rss.xml", SITE_URL);
 const shouldLoadPostHog =
-  import.meta.env.PROD &&
-  typeof PUBLIC_POSTHOG_PROJECT_TOKEN === "string" &&
-  PUBLIC_POSTHOG_PROJECT_TOKEN.length > 0;
+  import.meta.env.PROD && Boolean(PUBLIC_POSTHOG_PROJECT_TOKEN);
 ---
 
 <!doctype html>
