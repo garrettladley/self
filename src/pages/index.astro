@@ -2,9 +2,13 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHeader from "../components/PageHeader.astro";
 import { SOCIAL_PROFILES } from "../consts";
+import { getBlogPosts } from "../data/blog";
+
+const posts = await getBlogPosts();
 
 const nav = [
-  { label: "Writing", href: "/blog" },
+  { label: "Experience", href: "/experience" },
+  ...(posts.length > 0 ? [{ label: "Writing", href: "/blog" }] : []),
   { label: "Projects", href: "/projects" },
   { label: "Library", href: "/library" },
 ];
@@ -15,12 +19,12 @@ const elsewhere = Object.values(SOCIAL_PROFILES);
 <BaseLayout>
   <main class="doc flow">
     <PageHeader>
-      <p class="text-foreground-soft">Member of Technical Staff at Agency AI</p>
-      <p class="text-foreground-dim">New York</p>
+      <p class="text-foreground-soft">Software Engineer at Klaviyo</p>
+      <p class="text-foreground-dim">Boston, MA</p>
     </PageHeader>
 
     <p class="max-w-[58ch] text-foreground-soft">
-      I work on products and distributed systems. <br /> Massive Go fan.
+      I work on products and distributed systems. <br /> Massive Gopher.
     </p>
 
     <nav aria-label="Sections">
