@@ -49,6 +49,5 @@ const { posts } = Astro.props;
     rssLink.addEventListener("click", handleRssClick);
   }
 
-  document.addEventListener("DOMContentLoaded", setupRssLink);
   document.addEventListener("astro:page-load", setupRssLink);
 </script>
