@@ -42,9 +42,6 @@ importers:
       astro:
         specifier: ^7.1.1
         version: 7.1.1(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@25.3.0)(@vercel/functions@3.4.3)(jiti@2.6.1)(rollup@4.60.4)(yaml@2.8.3)
-      posthog-js:
-        specifier: ^1.390.0
-        version: 1.390.0
       sharp:
         specifier: ^0.35.0
         version: 0.35.0

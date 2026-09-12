@@ -3,13 +3,15 @@ import {
   PUBLIC_POSTHOG_HOST,
   PUBLIC_POSTHOG_PROJECT_TOKEN,
 } from "astro:env/client";
+
+const apiHost = PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com";
 ---
 
 <script
   is:inline
   define:vars={{
     apiKey: PUBLIC_POSTHOG_PROJECT_TOKEN,
-    apiHost: PUBLIC_POSTHOG_HOST,
+    apiHost,
   }}
 >
   if (!window.__posthog_initialized) {
@@ -66,7 +68,7 @@ import {
     })(document, window.posthog || []);
     /* eslint-enable */
     posthog.init(apiKey || "", {
-      api_host: apiHost || "",
+      api_host: apiHost,
       defaults: "2026-01-30",
       capture_pageview: "history_change",
     });
