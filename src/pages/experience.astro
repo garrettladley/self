@@ -1,0 +1,44 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeader from "../components/PageHeader.astro";
+import { experience } from "../data/experience";
+---
+
+<BaseLayout
+  title="Experience - Garrett Ladley"
+  description="Experience of Garrett Ladley, Software Engineer at Klaviyo."
+>
+  <main class="doc flow">
+    <PageHeader title="Experience" />
+
+    <ol class="space-y-[2.4em]">
+      {
+        experience.map((entry) => (
+          <li>
+            <p>
+              {entry.role} <span class="text-foreground-dim">·</span>{" "}
+              {entry.company}
+            </p>
+            <p class="text-foreground-dim">
+              {entry.period}
+              {entry.location && ` · ${entry.location}`}
+            </p>
+            {entry.note && (
+              <p class="mt-[0.7em] text-foreground-soft">
+                {entry.note.text}{" "}
+                <a
+                  class="link"
+                  href={entry.note.href}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {entry.note.linkLabel}
+                </a>
+              </p>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </main>
+</BaseLayout>

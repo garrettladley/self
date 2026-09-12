@@ -27,11 +27,11 @@ function generateLlmsTxt(posts: BlogPost[]): string {
 
   return `# Garrett Ladley
 
-> Personal website of Garrett Ladley, Member of Technical Staff at Agency AI, based in New York City.
+> Personal website of Garrett Ladley, Software Engineer at Klaviyo, based in Boston, MA.
 
 ## About
 
-Garrett Ladley is a software engineer specializing in Go and Rust. He currently works as a Member of Technical Staff at Agency AI. He is based in New York City.
+Garrett Ladley is a software engineer specializing in Go and Rust. He currently works as a Software Engineer at Klaviyo. He is based in Boston, MA.
 
 ## Links
 
@@ -43,6 +43,7 @@ Garrett Ladley is a software engineer specializing in Go and Rust. He currently 
 ## Pages
 
 - [Home](${SITE}/): Overview with role, location, and focus areas
+- [Experience](${SITE}/experience): Professional experience, including Agency AI's acquisition by Klaviyo
 - [Writing](${SITE}/blog): Writing by Garrett Ladley
 - [Projects](${SITE}/projects): Open-source and personal software projects
 - [Library](${SITE}/library): Books read by year

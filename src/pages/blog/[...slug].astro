@@ -1,21 +1,36 @@
 ---
 import { render } from "astro:content";
-import { getBlogPosts } from "../../data/blog";
+import BlogIndex from "../../components/BlogIndex.astro";
 import BlogPost from "../../layouts/BlogPost.astro";
+import { getBlogPosts, type BlogPost as BlogPostEntry } from "../../data/blog";
 
 export async function getStaticPaths() {
   const posts = await getBlogPosts();
 
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: { post },
-  }));
+  if (posts.length === 0) return [];
+
+  return [
+    { params: { slug: undefined }, props: { posts } },
+    ...posts.map((post) => ({
+      params: { slug: post.id },
+      props: { post },
+    })),
+  ];
 }
 
-const { post } = Astro.props;
-const { Content } = await render(post);
+const { post, posts } = Astro.props as {
+  post?: BlogPostEntry;
+  posts?: BlogPostEntry[];
+};
+const Content = post ? (await render(post)).Content : undefined;
 ---
 
-<BlogPost {...post.data}>
-  <Content />
-</BlogPost>
+{
+  posts ? (
+    <BlogIndex posts={posts} />
+  ) : post && Content ? (
+    <BlogPost {...post.data}>
+      <Content />
+    </BlogPost>
+  ) : null
+}
