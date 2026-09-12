@@ -21,6 +21,7 @@ export const experience: ExperienceEntry[] = [
     company: "Agency AI",
     role: "Member of Technical Staff",
     period: "2025 – 2026",
+    location: "New York City",
     note: {
       text: "Agency was acquired by Klaviyo in 2026.",
       href: "https://techcrunch.com/2026/08/05/klaviyo-acquires-elias-torres-agency-in-full-circle-reunion-for-tech-founders/",
