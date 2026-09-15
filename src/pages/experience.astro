@@ -42,3 +42,24 @@ import { experience } from "../data/experience";
     </ol>
   </main>
 </BaseLayout>
+
+<script is:inline>
+  function handleExperienceClick(e) {
+    const link = e.currentTarget;
+    window.posthog?.capture("experience_link_clicked", {
+      label: link.textContent?.trim(),
+      href: link.getAttribute("href"),
+    });
+  }
+
+  function setupExperienceLinks() {
+    document
+      .querySelectorAll('main a[target="_blank"]')
+      .forEach(function (link) {
+        link.removeEventListener("click", handleExperienceClick);
+        link.addEventListener("click", handleExperienceClick);
+      });
+  }
+
+  document.addEventListener("astro:page-load", setupExperienceLinks);
+</script>
