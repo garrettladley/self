@@ -10,7 +10,7 @@ overrides:
   esbuild: '>=0.28.1'
   fast-uri: '>=3.1.2'
   ip-address: '>=10.1.1'
-  js-yaml: '>=4.2.0'
+  js-yaml: '>=4.2.0 <5'
   lodash: '>=4.18.1'
   path-to-regexp: '>=6.3.0'
   postcss: '>=8.5.10'
@@ -3120,10 +3120,6 @@ packages:
     resolution: {integrity: sha512-ePWsvanv0DWuDRsW8dnt+R4jQ31SCRCQ7hhNcPXZPsoBZiemuZNYGf7adZdqX2D86j6rvKp3RpCxVTSb8WQlOw==}
     hasBin: true
 
-  js-yaml@5.2.3:
-    resolution: {integrity: sha512-n+mUVyUX5bVv7G/G2zyIHOhdxfuU1dY2NOFzTQUWiMUbFss8b57NFlgCCaggU78wSw5KVS9cllzeLyzyR+n5nw==}
-    hasBin: true
-
   json-buffer@3.0.1:
     resolution: {integrity: sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ==}
 
@@ -5021,7 +5017,7 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.5
       '@types/mdast': 4.0.4
-      js-yaml: 5.2.3
+      js-yaml: 4.2.0
       picomatch: 4.0.5
       retext-smartypants: 6.2.0
       shiki: 4.4.2
@@ -8150,10 +8146,6 @@ snapshots:
   js-tokens@4.0.0: {}
 
   js-yaml@4.2.0:
-    dependencies:
-      argparse: 2.0.1
-
-  js-yaml@5.2.3:
     dependencies:
       argparse: 2.0.1
 
