@@ -102,19 +102,19 @@ jobs:
       - run: pnpm install --frozen-lockfile --strict-peer-dependencies
       - run: pnpm run build
 
-      - name: Cache Chrome
-        id: chrome-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.browser-driver-manager
-          key: chrome-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-
-      - name: Install Chrome
-        if: steps.chrome-cache.outputs.cache-hit != 'true'
-        run: pnpm browser-driver-manager install chrome
+      - name: Install Playwright browser
+        run: pnpm exec playwright install --with-deps chromium
 
       - name: a11y
         run: |
-          pnpm astro preview &
-          npx wait-on http://localhost:4321 --timeout 10000
+          pnpm astro preview >/tmp/astro-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid"' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://localhost:4321 >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          curl --fail --silent http://localhost:4321 >/dev/null
           pnpm run a11y
