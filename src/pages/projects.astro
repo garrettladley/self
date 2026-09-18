@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHeader from "../components/PageHeader.astro";
 import { projects } from "../data/projects";
 import { SITE_URL, AUTHOR } from "../consts";
+import { ANALYTICS_EVENTS } from "../analytics";
 
 const withProjectTracking = (href: string) => {
   const url = new URL(href);
@@ -30,6 +31,8 @@ const withProjectTracking = (href: string) => {
                 href={withProjectTracking(project.href)}
                 target="_blank"
                 rel="noreferrer"
+                data-analytics-event={ANALYTICS_EVENTS.projectLinkClicked}
+                data-analytics-project-name={project.name}
               >
                 {project.name}
               </a>
@@ -79,22 +82,3 @@ const withProjectTracking = (href: string) => {
     })}
   />
 </BaseLayout>
-
-<script is:inline>
-  function handleProjectClick(e) {
-    const link = e.currentTarget;
-    window.posthog?.capture("project_link_clicked", {
-      project_name: link.textContent?.trim(),
-      href: link.getAttribute("href"),
-    });
-  }
-
-  function setupProjectLinks() {
-    document.querySelectorAll('ul a[target="_blank"]').forEach(function (link) {
-      link.removeEventListener("click", handleProjectClick);
-      link.addEventListener("click", handleProjectClick);
-    });
-  }
-
-  document.addEventListener("astro:page-load", setupProjectLinks);
-</script>

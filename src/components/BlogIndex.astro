@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHeader from "./PageHeader.astro";
 import { formatDate } from "../utils/date";
 import type { BlogPost } from "../data/blog";
+import { ANALYTICS_EVENTS } from "../analytics";
 
 interface Props {
   posts: BlogPost[];
@@ -22,7 +23,7 @@ const { posts } = Astro.props;
       {
         posts.map((post) => (
           <li>
-            <a class="link" href={`/blog/${post.id}/`}>
+            <a class="link" href={`/blog/${post.id}`}>
               {post.data.title}
             </a>
             <p class="text-meta text-foreground-dim">
@@ -33,21 +34,12 @@ const { posts } = Astro.props;
       }
     </ul>
 
-    <p><a class="link-quiet" href="/rss.xml">RSS</a></p>
+    <p>
+      <a
+        class="link-quiet"
+        href="/rss.xml"
+        data-analytics-event={ANALYTICS_EVENTS.rssFeedClicked}>RSS</a
+      >
+    </p>
   </main>
 </BaseLayout>
-
-<script is:inline>
-  function handleRssClick() {
-    window.posthog?.capture("rss_feed_clicked");
-  }
-
-  function setupRssLink() {
-    const rssLink = document.querySelector('a[href="/rss.xml"]');
-    if (!rssLink) return;
-    rssLink.removeEventListener("click", handleRssClick);
-    rssLink.addEventListener("click", handleRssClick);
-  }
-
-  document.addEventListener("astro:page-load", setupRssLink);
-</script>

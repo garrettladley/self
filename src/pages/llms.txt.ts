@@ -20,10 +20,13 @@ function generateLlmsTxt(posts: BlogPost[]): string {
     posts.length > 0
       ? posts
           .map(
-            (post) => `- [${post.data.title}](${SITE}/blog/${post.id}/): ${post.data.description}`,
+            (post) => `- [${post.data.title}](${SITE}/blog/${post.id}): ${post.data.description}`,
           )
           .join("\n")
       : "- No published posts yet";
+
+  const writingPageLine =
+    posts.length > 0 ? `- [Writing](${SITE}/blog): Writing by Garrett Ladley` : "";
 
   return `# Garrett Ladley
 
@@ -44,7 +47,7 @@ Garrett Ladley is a software engineer specializing in Go and Rust. He currently 
 
 - [Home](${SITE}/): Overview with role, location, and focus areas
 - [Experience](${SITE}/experience): Professional experience, including Agency AI's acquisition by Klaviyo
-- [Writing](${SITE}/blog): Writing by Garrett Ladley
+${writingPageLine}
 - [Projects](${SITE}/projects): Open-source and personal software projects
 - [Library](${SITE}/library): Books read by year
 - [RSS](${SITE}/rss.xml): Feed for new writing

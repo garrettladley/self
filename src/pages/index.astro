@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHeader from "../components/PageHeader.astro";
 import { SOCIAL_PROFILES } from "../consts";
 import { getBlogPosts } from "../data/blog";
+import { ANALYTICS_EVENTS } from "../analytics";
 
 const posts = await getBlogPosts();
 
@@ -47,7 +48,13 @@ const elsewhere = Object.values(SOCIAL_PROFILES);
     >
       {
         elsewhere.map((e) => (
-          <a class="link-quiet" href={e.url} target="_blank" rel="noreferrer">
+          <a
+            class="link-quiet"
+            href={e.url}
+            target="_blank"
+            rel="noreferrer"
+            data-analytics-event={ANALYTICS_EVENTS.externalLinkClicked}
+          >
             {e.label}
           </a>
         ))
@@ -55,24 +62,3 @@ const elsewhere = Object.values(SOCIAL_PROFILES);
     </nav>
   </main>
 </BaseLayout>
-
-<script is:inline>
-  function handleElsewhereClick(e) {
-    const link = e.currentTarget;
-    window.posthog?.capture("external_link_clicked", {
-      label: link.textContent?.trim(),
-      href: link.getAttribute("href"),
-    });
-  }
-
-  function setupElsewhereLinks() {
-    const nav = document.querySelector('nav[aria-label="Elsewhere"]');
-    if (!nav) return;
-    nav.querySelectorAll("a").forEach(function (link) {
-      link.removeEventListener("click", handleElsewhereClick);
-      link.addEventListener("click", handleElsewhereClick);
-    });
-  }
-
-  document.addEventListener("astro:page-load", setupElsewhereLinks);
-</script>

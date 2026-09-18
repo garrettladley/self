@@ -29,6 +29,7 @@ export async function GET(context: APIContext) {
     title: "Garrett Ladley",
     description: "Writing by Garrett Ladley.",
     site,
+    trailingSlash: false,
     xmlns: {
       atom: "http://www.w3.org/2005/Atom",
     },
@@ -36,7 +37,7 @@ export async function GET(context: APIContext) {
       title: post.data.title,
       description: post.data.description,
       pubDate: post.data.pubDate,
-      link: `/blog/${post.id}/`,
+      link: `/blog/${post.id}`,
       categories: post.data.tags,
     })),
     customData,

@@ -1,7 +1,6 @@
 // @ts-check
 import { defineConfig, envField } from "astro/config";
 import vercel from "@astrojs/vercel";
-import { cacheVercel } from "@astrojs/vercel/cache";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 
@@ -12,13 +11,19 @@ export default defineConfig({
   site: "https://garrettladley.com",
   output: "static",
   adapter: vercel(),
-  cache: {
-    // Experimental in Astro 7: push caching directives to Vercel's edge
-    // network so cache hits are served from the CDN without invoking the
-    // server function. Enabled automatically in a future release.
-    provider: cacheVercel(),
-  },
-  integrations: [sitemap(), mdx()],
+  trailingSlash: "never",
+  integrations: [
+    sitemap({
+      serialize(item) {
+        const url = new URL(item.url);
+        if (url.pathname !== "/") {
+          url.pathname = url.pathname.replace(/\/+$/, "");
+        }
+        return { ...item, url: url.href };
+      },
+    }),
+    mdx(),
+  ],
   env: {
     schema: {
       PUBLIC_POSTHOG_PROJECT_TOKEN: envField.string({
