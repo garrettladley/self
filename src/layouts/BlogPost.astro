@@ -3,6 +3,8 @@ import BaseLayout from "./BaseLayout.astro";
 import PageHeader from "../components/PageHeader.astro";
 import { SITE_URL, AUTHOR } from "../consts";
 import { formatDate } from "../utils/date";
+import { ANALYTICS_EVENTS } from "../analytics";
+import { canonicalUrl } from "../utils/url";
 
 interface Props {
   title: string;
@@ -14,11 +16,16 @@ interface Props {
 
 const { title, description, pubDate, updatedDate, tags } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname, SITE_URL);
+const canonical = canonicalUrl(Astro.url.pathname);
 ---
 
 <BaseLayout title={`${title} - ${AUTHOR}`} description={description}>
-  <main class="doc flow">
+  <main
+    class="doc flow"
+    data-analytics-page-view={ANALYTICS_EVENTS.blogPostViewed}
+    data-analytics-title={title}
+    data-analytics-tags={JSON.stringify(tags)}
+  >
     <article class="flow">
       <PageHeader title={title} article>
         <p class="mt-[0.5em] text-meta text-foreground-dim">
@@ -64,11 +71,4 @@ const canonical = new URL(Astro.url.pathname, SITE_URL);
       keywords: tags,
     })}
   />
-
-  <script is:inline define:vars={{ postTitle: title, postTags: tags }}>
-    window.posthog?.capture("blog_post_viewed", {
-      title: postTitle,
-      tags: postTags,
-    });
-  </script>
 </BaseLayout>

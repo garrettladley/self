@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
-    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build && pnpm run check:site",
+    "check:site": "node scripts/site-contract.mjs",
     "typecheck": "ASTRO_TELEMETRY_DISABLED=1 astro check --minimumFailingSeverity warning",
     "lint": "eslint . --cache --max-warnings 0",
     "lint:fix": "eslint . --fix --cache",
