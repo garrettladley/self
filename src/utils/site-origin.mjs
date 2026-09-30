@@ -1,8 +1,9 @@
 const DEFAULT_SITE_URL = "https://garrettladley.com";
 
 export function resolveSiteOrigin(env) {
+  const previewHost = env.VERCEL_BRANCH_URL || env.VERCEL_URL;
   const previewUrl =
-    env.VERCEL_ENV === "preview" && env.VERCEL_URL ? `https://${env.VERCEL_URL}` : undefined;
+    env.VERCEL_ENV === "preview" && previewHost ? `https://${previewHost}` : undefined;
   const productionUrl =
     env.SITE_URL ||
     (env.VERCEL_PROJECT_PRODUCTION_URL
