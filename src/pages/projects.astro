@@ -2,8 +2,11 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHeader from "../components/PageHeader.astro";
 import { projects } from "../data/projects";
-import { SITE_URL, AUTHOR } from "../consts";
+import { AUTHOR } from "../consts";
 import { ANALYTICS_EVENTS } from "../analytics";
+import { getSiteUrl } from "../utils/site-url";
+
+const site = getSiteUrl({ url: Astro.url, site: Astro.site });
 
 const withProjectTracking = (href: string) => {
   const url = new URL(href);
@@ -75,7 +78,7 @@ const withProjectTracking = (href: string) => {
           author: {
             "@type": "Person",
             name: AUTHOR,
-            url: SITE_URL,
+            url: site.origin,
           },
         },
       })),

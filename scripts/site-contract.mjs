@@ -1,12 +1,10 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { extname, join, relative, resolve } from "node:path";
 import process from "node:process";
+import { resolveSiteOrigin } from "../src/utils/site-origin.mjs";
 
 const outputDirectory = resolve(process.env.SITE_OUTPUT_DIR ?? "dist");
-const siteOrigin = new URL(process.env.SITE_URL ?? "https://garrettladley.com");
-siteOrigin.pathname = "/";
-siteOrigin.search = "";
-siteOrigin.hash = "";
+const siteOrigin = new URL(resolveSiteOrigin(process.env));
 
 const failures = [];
 
@@ -177,6 +175,22 @@ function checkHtmlDocuments(routes) {
     const html = readFileSync(path, "utf8");
     const sourceUrl = sourceUrlForRoute(route);
     const canonical = canonicalLinks(html);
+
+    if (
+      process.env.VERCEL_ENV === "preview" &&
+      ![...html.matchAll(/<meta\b[^>]*>/gi)].some((match) => {
+        const attrs = attributes(match[0]);
+        return (
+          attrs.name?.toLowerCase() === "robots" &&
+          attrs.content
+            ?.toLowerCase()
+            .split(/[\s,]+/)
+            .includes("noindex")
+        );
+      })
+    ) {
+      fail(`${route}: preview page is missing robots noindex`);
+    }
 
     if (canonical.length !== 1) {
       fail(`${route}: expected exactly one canonical URL, found ${canonical.length}`);
