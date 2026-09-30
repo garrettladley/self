@@ -2,15 +2,18 @@ import type { APIRoute } from "astro";
 import { projects } from "../data/projects";
 import { library } from "../data/library";
 import { experience } from "../data/experience";
-import { SITE_URL as SITE, SOCIAL_PROFILES } from "../consts";
+import { SOCIAL_PROFILES } from "../consts";
 import { getBlogPosts, type BlogPost } from "../data/blog";
 import { withOutboundTracking } from "../utils/outbound-url";
+import { getSiteUrl } from "../utils/site-url";
 
-function generateLlmsTxt(posts: BlogPost[]): string {
+function generateLlmsTxt(posts: BlogPost[], site: URL): string {
+  const absoluteUrl = (path: string) => new URL(path, site).href;
+
   const projectLines = projects
     .map((p) => {
       const prefix = p.href
-        ? `[${p.name}](${withOutboundTracking(p.href, "llms")})`
+        ? `[${p.name}](${withOutboundTracking(p.href, "llms", site)})`
         : `${p.name} (private)`;
       return `- ${prefix}: ${p.description} (${p.tools.join(", ")})`;
     })
@@ -23,7 +26,7 @@ function generateLlmsTxt(posts: BlogPost[]): string {
   const experienceLines = experience
     .map((entry) => {
       const location = entry.location ? `; ${entry.location}` : "";
-      const noteLink = entry.note ? withOutboundTracking(entry.note.href, "llms") : "";
+      const noteLink = entry.note ? withOutboundTracking(entry.note.href, "llms", site) : "";
       const note = entry.note ? `: ${entry.note.text} [${entry.note.linkLabel}](${noteLink})` : "";
       return `- ${entry.role} at ${entry.company} (${entry.period}${location})${note}`;
     })
@@ -33,21 +36,22 @@ function generateLlmsTxt(posts: BlogPost[]): string {
     posts.length > 0
       ? `## Writing\n\n${posts
           .map(
-            (post) => `- [${post.data.title}](${SITE}/blog/${post.id}): ${post.data.description}`,
+            (post) =>
+              `- [${post.data.title}](${absoluteUrl(`/blog/${post.id}`)}): ${post.data.description}`,
           )
           .join("\n")}\n\n`
       : "";
 
   const writingPageLine =
-    posts.length > 0 ? `- [Writing](${SITE}/blog): Writing by Garrett Ladley` : "";
+    posts.length > 0 ? `- [Writing](${absoluteUrl("/blog")}): Writing by Garrett Ladley` : "";
 
   const pageLines = [
-    `- [Home](${SITE}/): Overview with role, location, and focus areas`,
-    `- [Experience](${SITE}/experience): Professional history with roles, dates, locations, and career notes`,
+    `- [Home](${absoluteUrl("/")}): Overview with role, location, and focus areas`,
+    `- [Experience](${absoluteUrl("/experience")}): Professional history with roles, dates, locations, and career notes`,
     writingPageLine,
-    `- [Projects](${SITE}/projects): Open-source and personal software projects`,
-    `- [Library](${SITE}/library): Books read by year`,
-    `- [RSS](${SITE}/rss.xml): Feed for new writing`,
+    `- [Projects](${absoluteUrl("/projects")}): Open-source and personal software projects`,
+    `- [Library](${absoluteUrl("/library")}): Books read by year`,
+    `- [RSS](${absoluteUrl("/rss.xml")}): Feed for new writing`,
   ]
     .filter(Boolean)
     .join("\n");
@@ -62,10 +66,10 @@ Garrett Ladley is a software engineer specializing in Go and Rust. He currently 
 
 ## Links
 
-- Website: ${SITE}
-- GitHub: ${withOutboundTracking(SOCIAL_PROFILES.github.url, "llms")}
-- LinkedIn: ${withOutboundTracking(SOCIAL_PROFILES.linkedin.url, "llms")}
-- X: ${withOutboundTracking(SOCIAL_PROFILES.x.url, "llms")}
+- Website: ${site.origin}
+- GitHub: ${withOutboundTracking(SOCIAL_PROFILES.github.url, "llms", site)}
+- LinkedIn: ${withOutboundTracking(SOCIAL_PROFILES.linkedin.url, "llms", site)}
+- X: ${withOutboundTracking(SOCIAL_PROFILES.x.url, "llms", site)}
 
 ## Pages
 
@@ -85,10 +89,10 @@ ${bookLines}
 `;
 }
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async (context) => {
   const posts = await getBlogPosts();
 
-  return new Response(generateLlmsTxt(posts), {
+  return new Response(generateLlmsTxt(posts, getSiteUrl(context)), {
     headers: { "Content-Type": "text/plain; charset=utf-8" },
   });
 };

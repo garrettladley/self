@@ -1,14 +1,16 @@
 // @ts-check
+import process from "node:process";
 import { defineConfig, envField } from "astro/config";
 import vercel from "@astrojs/vercel";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 
 import mdx from "@astrojs/mdx";
+import { resolveSiteOrigin } from "./src/utils/site-origin.mjs";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://garrettladley.com",
+  site: resolveSiteOrigin(process.env),
   output: "static",
   adapter: vercel(),
   trailingSlash: "never",

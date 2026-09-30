@@ -4,7 +4,8 @@ import { ClientRouter } from "astro:transitions";
 import { PUBLIC_POSTHOG_PROJECT_TOKEN } from "astro:env/client";
 import Analytics from "../components/Analytics.astro";
 import PostHog from "../components/PostHog.astro";
-import { SITE_URL, AUTHOR, SOCIAL_PROFILES } from "../consts";
+import { AUTHOR, SOCIAL_PROFILES } from "../consts";
+import { getSiteUrl, isVercelPreview } from "../utils/site-url";
 import { canonicalUrl } from "../utils/url";
 
 interface Props {
@@ -21,9 +22,11 @@ const {
   noIndex = false,
 } = Astro.props;
 
-const canonical = canonicalUrl(Astro.url.pathname);
-const ogImageUrl = new URL(ogImage, SITE_URL).href;
-const rssUrl = new URL("/rss.xml", SITE_URL);
+const site = getSiteUrl({ url: Astro.url, site: Astro.site });
+const canonical = canonicalUrl(Astro.url.pathname, site);
+const ogImageUrl = new URL(ogImage, site).href;
+const rssUrl = new URL("/rss.xml", site);
+const shouldNoIndex = noIndex || isVercelPreview();
 const shouldLoadPostHog =
   import.meta.env.PROD && Boolean(PUBLIC_POSTHOG_PROJECT_TOKEN);
 ---
@@ -75,7 +78,7 @@ const shouldLoadPostHog =
       crossorigin
     />
     <meta name="theme-color" content="#f5f4ef" />
-    {noIndex && <meta name="robots" content="noindex" />}
+    {shouldNoIndex && <meta name="robots" content="noindex" />}
     <title>{title}</title>
     <ClientRouter fallback="swap" />
     {shouldLoadPostHog && <PostHog />}
@@ -91,7 +94,7 @@ const shouldLoadPostHog =
         mainEntity: {
           "@type": "Person",
           name: AUTHOR,
-          url: SITE_URL,
+          url: site.origin,
           description:
             "Software engineer specializing in Go and Rust, passionate about building products, backend development, and distributed systems. Software Engineer at Klaviyo in Boston, MA.",
           jobTitle: "Software Engineer",
