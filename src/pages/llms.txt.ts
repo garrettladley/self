@@ -4,11 +4,14 @@ import { library } from "../data/library";
 import { experience } from "../data/experience";
 import { SITE_URL as SITE, SOCIAL_PROFILES } from "../consts";
 import { getBlogPosts, type BlogPost } from "../data/blog";
+import { withOutboundTracking } from "../utils/outbound-url";
 
 function generateLlmsTxt(posts: BlogPost[]): string {
   const projectLines = projects
     .map((p) => {
-      const prefix = p.href ? `[${p.name}](${p.href})` : `${p.name} (private)`;
+      const prefix = p.href
+        ? `[${p.name}](${withOutboundTracking(p.href, "llms")})`
+        : `${p.name} (private)`;
       return `- ${prefix}: ${p.description} (${p.tools.join(", ")})`;
     })
     .join("\n");
@@ -20,9 +23,8 @@ function generateLlmsTxt(posts: BlogPost[]): string {
   const experienceLines = experience
     .map((entry) => {
       const location = entry.location ? `; ${entry.location}` : "";
-      const note = entry.note
-        ? `: ${entry.note.text} [${entry.note.linkLabel}](${entry.note.href})`
-        : "";
+      const noteLink = entry.note ? withOutboundTracking(entry.note.href, "llms") : "";
+      const note = entry.note ? `: ${entry.note.text} [${entry.note.linkLabel}](${noteLink})` : "";
       return `- ${entry.role} at ${entry.company} (${entry.period}${location})${note}`;
     })
     .join("\n");
@@ -61,9 +63,9 @@ Garrett Ladley is a software engineer specializing in Go and Rust. He currently 
 ## Links
 
 - Website: ${SITE}
-- GitHub: ${SOCIAL_PROFILES.github.url}
-- LinkedIn: ${SOCIAL_PROFILES.linkedin.url}
-- X: ${SOCIAL_PROFILES.x.url}
+- GitHub: ${withOutboundTracking(SOCIAL_PROFILES.github.url, "llms")}
+- LinkedIn: ${withOutboundTracking(SOCIAL_PROFILES.linkedin.url, "llms")}
+- X: ${withOutboundTracking(SOCIAL_PROFILES.x.url, "llms")}
 
 ## Pages
 

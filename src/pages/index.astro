@@ -4,6 +4,7 @@ import PageHeader from "../components/PageHeader.astro";
 import { SOCIAL_PROFILES } from "../consts";
 import { getBlogPosts } from "../data/blog";
 import { ANALYTICS_EVENTS } from "../analytics";
+import { withOutboundTracking } from "../utils/outbound-url";
 
 const posts = await getBlogPosts();
 
@@ -50,7 +51,7 @@ const elsewhere = Object.values(SOCIAL_PROFILES);
         elsewhere.map((e) => (
           <a
             class="link-quiet"
-            href={e.url}
+            href={withOutboundTracking(e.url, "homepage")}
             target="_blank"
             rel="noreferrer"
             data-analytics-event={ANALYTICS_EVENTS.externalLinkClicked}
