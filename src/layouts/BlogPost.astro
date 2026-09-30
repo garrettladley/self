@@ -1,9 +1,10 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import PageHeader from "../components/PageHeader.astro";
-import { SITE_URL, AUTHOR } from "../consts";
+import { AUTHOR } from "../consts";
 import { formatDate } from "../utils/date";
 import { ANALYTICS_EVENTS } from "../analytics";
+import { getSiteUrl } from "../utils/site-url";
 import { canonicalUrl } from "../utils/url";
 
 interface Props {
@@ -16,7 +17,8 @@ interface Props {
 
 const { title, description, pubDate, updatedDate, tags } = Astro.props;
 
-const canonical = canonicalUrl(Astro.url.pathname);
+const site = getSiteUrl({ url: Astro.url, site: Astro.site });
+const canonical = canonicalUrl(Astro.url.pathname, site);
 ---
 
 <BaseLayout title={`${title} - ${AUTHOR}`} description={description}>
@@ -66,7 +68,7 @@ const canonical = canonicalUrl(Astro.url.pathname);
       author: {
         "@type": "Person",
         name: AUTHOR,
-        url: SITE_URL,
+        url: site.origin,
       },
       keywords: tags,
     })}

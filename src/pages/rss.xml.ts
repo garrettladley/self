@@ -1,14 +1,14 @@
 import rss from "@astrojs/rss";
 import type { APIContext } from "astro";
-import { SITE_URL } from "../consts";
 import { getBlogPosts } from "../data/blog";
+import { getSiteUrl } from "../utils/site-url";
 
 const FEED_PATH = "/rss.xml";
 
 export async function GET(context: APIContext) {
   const posts = await getBlogPosts();
 
-  const site = context.site ?? new URL(SITE_URL);
+  const site = getSiteUrl(context);
   const feedUrl = new URL(FEED_PATH, site).href;
   const lastBuildDate = posts.reduce<Date | undefined>((latest, post) => {
     const postBuildDate = post.data.updatedDate ?? post.data.pubDate;

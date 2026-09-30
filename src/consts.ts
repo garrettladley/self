@@ -1,6 +1,4 @@
-// Single source of truth for site-wide identity. Mirrors `site` in
-// astro.config.mjs (which can't be imported from runtime code).
-export const SITE_URL = "https://garrettladley.com";
+// Site identity shared by page metadata and structured data.
 export const AUTHOR = "Garrett Ladley";
 
 export const SOCIAL_PROFILES = {

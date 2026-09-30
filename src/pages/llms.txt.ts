@@ -2,10 +2,13 @@ import type { APIRoute } from "astro";
 import { projects } from "../data/projects";
 import { library } from "../data/library";
 import { experience } from "../data/experience";
-import { SITE_URL as SITE, SOCIAL_PROFILES } from "../consts";
+import { SOCIAL_PROFILES } from "../consts";
 import { getBlogPosts, type BlogPost } from "../data/blog";
+import { getSiteUrl } from "../utils/site-url";
 
-function generateLlmsTxt(posts: BlogPost[]): string {
+function generateLlmsTxt(posts: BlogPost[], site: URL): string {
+  const absoluteUrl = (path: string) => new URL(path, site).href;
+
   const projectLines = projects
     .map((p) => {
       const prefix = p.href ? `[${p.name}](${p.href})` : `${p.name} (private)`;
@@ -31,21 +34,22 @@ function generateLlmsTxt(posts: BlogPost[]): string {
     posts.length > 0
       ? `## Writing\n\n${posts
           .map(
-            (post) => `- [${post.data.title}](${SITE}/blog/${post.id}): ${post.data.description}`,
+            (post) =>
+              `- [${post.data.title}](${absoluteUrl(`/blog/${post.id}`)}): ${post.data.description}`,
           )
           .join("\n")}\n\n`
       : "";
 
   const writingPageLine =
-    posts.length > 0 ? `- [Writing](${SITE}/blog): Writing by Garrett Ladley` : "";
+    posts.length > 0 ? `- [Writing](${absoluteUrl("/blog")}): Writing by Garrett Ladley` : "";
 
   const pageLines = [
-    `- [Home](${SITE}/): Overview with role, location, and focus areas`,
-    `- [Experience](${SITE}/experience): Professional history with roles, dates, locations, and career notes`,
+    `- [Home](${absoluteUrl("/")}): Overview with role, location, and focus areas`,
+    `- [Experience](${absoluteUrl("/experience")}): Professional history with roles, dates, locations, and career notes`,
     writingPageLine,
-    `- [Projects](${SITE}/projects): Open-source and personal software projects`,
-    `- [Library](${SITE}/library): Books read by year`,
-    `- [RSS](${SITE}/rss.xml): Feed for new writing`,
+    `- [Projects](${absoluteUrl("/projects")}): Open-source and personal software projects`,
+    `- [Library](${absoluteUrl("/library")}): Books read by year`,
+    `- [RSS](${absoluteUrl("/rss.xml")}): Feed for new writing`,
   ]
     .filter(Boolean)
     .join("\n");
@@ -60,7 +64,7 @@ Garrett Ladley is a software engineer specializing in Go and Rust. He currently 
 
 ## Links
 
-- Website: ${SITE}
+- Website: ${site.origin}
 - GitHub: ${SOCIAL_PROFILES.github.url}
 - LinkedIn: ${SOCIAL_PROFILES.linkedin.url}
 - X: ${SOCIAL_PROFILES.x.url}
@@ -83,10 +87,10 @@ ${bookLines}
 `;
 }
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async (context) => {
   const posts = await getBlogPosts();
 
-  return new Response(generateLlmsTxt(posts), {
+  return new Response(generateLlmsTxt(posts, getSiteUrl(context)), {
     headers: { "Content-Type": "text/plain; charset=utf-8" },
   });
 };
