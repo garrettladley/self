@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { projects } from "../data/projects";
 import { library } from "../data/library";
+import { experience } from "../data/experience";
 import { SITE_URL as SITE, SOCIAL_PROFILES } from "../consts";
 import { getBlogPosts, type BlogPost } from "../data/blog";
 
@@ -16,17 +17,38 @@ function generateLlmsTxt(posts: BlogPost[]): string {
     .map((year) => `- ${year.year}:\n${year.books.map((b) => `  - ${b.title}`).join("\n")}`)
     .join("\n");
 
-  const postLines =
+  const experienceLines = experience
+    .map((entry) => {
+      const location = entry.location ? `; ${entry.location}` : "";
+      const note = entry.note
+        ? `: ${entry.note.text} [${entry.note.linkLabel}](${entry.note.href})`
+        : "";
+      return `- ${entry.role} at ${entry.company} (${entry.period}${location})${note}`;
+    })
+    .join("\n");
+
+  const writingSection =
     posts.length > 0
-      ? posts
+      ? `## Writing\n\n${posts
           .map(
             (post) => `- [${post.data.title}](${SITE}/blog/${post.id}): ${post.data.description}`,
           )
-          .join("\n")
-      : "- No published posts yet";
+          .join("\n")}\n\n`
+      : "";
 
   const writingPageLine =
     posts.length > 0 ? `- [Writing](${SITE}/blog): Writing by Garrett Ladley` : "";
+
+  const pageLines = [
+    `- [Home](${SITE}/): Overview with role, location, and focus areas`,
+    `- [Experience](${SITE}/experience): Professional history with roles, dates, locations, and career notes`,
+    writingPageLine,
+    `- [Projects](${SITE}/projects): Open-source and personal software projects`,
+    `- [Library](${SITE}/library): Books read by year`,
+    `- [RSS](${SITE}/rss.xml): Feed for new writing`,
+  ]
+    .filter(Boolean)
+    .join("\n");
 
   return `# Garrett Ladley
 
@@ -45,18 +67,13 @@ Garrett Ladley is a software engineer specializing in Go and Rust. He currently 
 
 ## Pages
 
-- [Home](${SITE}/): Overview with role, location, and focus areas
-- [Experience](${SITE}/experience): Professional experience, including Agency AI's acquisition by Klaviyo
-${writingPageLine}
-- [Projects](${SITE}/projects): Open-source and personal software projects
-- [Library](${SITE}/library): Books read by year
-- [RSS](${SITE}/rss.xml): Feed for new writing
+${pageLines}
 
-## Writing
+## Experience
 
-${postLines}
+${experienceLines}
 
-## Projects
+${writingSection}## Projects
 
 ${projectLines}
 
