@@ -4,17 +4,10 @@ import PageHeader from "../components/PageHeader.astro";
 import { projects } from "../data/projects";
 import { AUTHOR } from "../consts";
 import { ANALYTICS_EVENTS } from "../analytics";
+import { withOutboundTracking } from "../utils/outbound-url";
 import { getSiteUrl } from "../utils/site-url";
 
 const site = getSiteUrl({ url: Astro.url, site: Astro.site });
-
-const withProjectTracking = (href: string) => {
-  const url = new URL(href);
-  url.searchParams.set("utm_source", "garrettladley.com");
-  url.searchParams.set("utm_medium", "projects");
-  url.searchParams.set("utm_campaign", "self-site");
-  return url.toString();
-};
 ---
 
 <BaseLayout
@@ -31,7 +24,7 @@ const withProjectTracking = (href: string) => {
             {project.href ? (
               <a
                 class="link"
-                href={withProjectTracking(project.href)}
+                href={withOutboundTracking(project.href, "projects", site)}
                 target="_blank"
                 rel="noreferrer"
                 data-analytics-event={ANALYTICS_EVENTS.projectLinkClicked}
