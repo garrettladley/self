@@ -3,6 +3,19 @@
   "trailingSlash": false,
   "headers": [
     {
+      "source": "/health",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {
