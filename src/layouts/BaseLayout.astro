@@ -1,29 +1,53 @@
 ---
 import "../styles/global.css";
+import bodyFontUrl from "../assets/fonts/lilex-latin-400-normal.woff2?url";
 import { ClientRouter } from "astro:transitions";
 import { PUBLIC_POSTHOG_PROJECT_TOKEN } from "astro:env/client";
 import Analytics from "../components/Analytics.astro";
 import PostHog from "../components/PostHog.astro";
-import { AUTHOR, SOCIAL_PROFILES } from "../consts";
+import { AUTHOR, SITE_DESCRIPTION, SOCIAL_PROFILES } from "../consts";
 import { getSiteUrl, isVercelPreview } from "../utils/site-url";
 import { canonicalUrl } from "../utils/url";
+import { personId, personSchema } from "../utils/structured-data";
 
 interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
   noIndex?: boolean;
+  pageType?: "WebPage" | "ProfilePage" | "CollectionPage";
+  mainEntity?: Record<string, unknown>;
 }
 
 const {
   title = AUTHOR,
-  description = "Garrett Ladley, Software Engineer at Klaviyo.",
+  description = SITE_DESCRIPTION,
   ogImage = "/og.png",
   noIndex = false,
+  pageType = "WebPage",
+  mainEntity,
 } = Astro.props;
 
 const site = getSiteUrl({ url: Astro.url, site: Astro.site });
 const canonical = canonicalUrl(Astro.url.pathname, site);
+const personReference = { "@id": personId(site) };
+const pageEntity =
+  mainEntity ?? (pageType === "ProfilePage" ? personReference : undefined);
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    personSchema(site),
+    {
+      "@type": pageType,
+      "@id": `${canonical.href}#webpage`,
+      url: canonical.href,
+      name: title,
+      description,
+      author: personReference,
+      ...(pageEntity && { mainEntity: pageEntity }),
+    },
+  ],
+};
 const ogImageUrl = new URL(ogImage, site).href;
 const rssUrl = new URL("/rss.xml", site);
 const shouldNoIndex = noIndex || isVercelPreview();
@@ -72,7 +96,7 @@ const shouldLoadPostHog =
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link
       rel="preload"
-      href="/fonts/lilex-latin-400-normal.woff2"
+      href={bodyFontUrl}
       as="font"
       type="font/woff2"
       crossorigin
@@ -84,47 +108,15 @@ const shouldLoadPostHog =
     {shouldLoadPostHog && <PostHog />}
     {shouldLoadPostHog && <Analytics />}
 
-    {/* JSON-LD Structured Data */}
-    <script
-      is:inline
-      type="application/ld+json"
-      set:html={JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "ProfilePage",
-        mainEntity: {
-          "@type": "Person",
-          name: AUTHOR,
-          url: site.origin,
-          description:
-            "Software engineer specializing in Go and Rust, passionate about building products, backend development, and distributed systems. Software Engineer at Klaviyo in Boston, MA.",
-          jobTitle: "Software Engineer",
-          worksFor: { "@type": "Organization", name: "Klaviyo" },
-          knowsAbout: [
-            "Go",
-            "Rust",
-            "Backend Development",
-            "Distributed Systems",
-            "AI Agents",
-            "Infrastructure",
-          ],
-          alumniOf: [
-            {
-              "@type": "CollegeOrUniversity",
-              name: "Northeastern University",
-            },
-            {
-              "@type": "HighSchool",
-              name: "New Canaan High School",
-            },
-            {
-              "@type": "MiddleSchool",
-              name: "Hong Kong International School",
-            },
-          ],
-          sameAs: Object.values(SOCIAL_PROFILES).map((profile) => profile.url),
-        },
-      })}
-    />
+    {
+      !noIndex && (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(structuredData)}
+        />
+      )
+    }
   </head>
   <body>
     <slot />

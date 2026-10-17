@@ -214,6 +214,73 @@ function checkHtmlDocuments(routes) {
   }
 }
 
+function checkStructuredData(routes) {
+  const expectedPersonId = new URL("/#person", siteOrigin).href;
+  const pageTypes = {
+    "/": "ProfilePage",
+    "/experience": "ProfilePage",
+    "/projects": "CollectionPage",
+    "/library": "CollectionPage",
+  };
+
+  for (const { path, route } of routes) {
+    const html = readFileSync(path, "utf8");
+    const documents = [];
+    for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
+      if (attributes(match[1]).type !== "application/ld+json") continue;
+      try {
+        documents.push(JSON.parse(match[2]));
+      } catch {
+        fail(`${route}: invalid JSON-LD`);
+      }
+    }
+
+    if (route === "/404") {
+      if (documents.length > 0) fail("/404: must not describe a content page with JSON-LD");
+      continue;
+    }
+
+    const entities = documents.flatMap((document) => document["@graph"] ?? [document]);
+    const people = entities.filter((entity) => entity["@type"] === "Person");
+    if (people.length !== 1 || people[0]["@id"] !== expectedPersonId) {
+      fail(`${route}: expected one Person with @id ${expectedPersonId}`);
+    }
+
+    const expectedType = pageTypes[route] ?? "WebPage";
+    const pages = entities.filter((entity) =>
+      ["WebPage", "ProfilePage", "CollectionPage"].includes(entity["@type"]),
+    );
+    const page = pages[0];
+    if (pages.length !== 1 || page["@type"] !== expectedType) {
+      fail(`${route}: expected one ${expectedType}`);
+    }
+    if (page?.url !== sourceUrlForRoute(route).href) {
+      fail(`${route}: structured page URL must match its canonical URL`);
+    }
+    if (expectedType === "ProfilePage" && page?.mainEntity?.["@id"] !== expectedPersonId) {
+      fail(`${route}: profile mainEntity must reference ${expectedPersonId}`);
+    }
+
+    function checkAuthors(value) {
+      if (!value || typeof value !== "object") return;
+      if ("author" in value && value.author?.["@id"] !== expectedPersonId) {
+        fail(`${route}: author must reference ${expectedPersonId}`);
+      }
+      for (const child of Object.values(value)) checkAuthors(child);
+    }
+    documents.forEach(checkAuthors);
+
+    if (route === "/projects") {
+      const list = entities.find((entity) => entity["@type"] === "ItemList");
+      if (!list || !Array.isArray(list.itemListElement) || list.itemListElement.length === 0) {
+        fail("/projects: missing project ItemList");
+      } else if (page?.mainEntity?.["@id"] !== list["@id"]) {
+        fail("/projects: collection mainEntity must reference its ItemList");
+      }
+    }
+  }
+}
+
 function checkSitemap(routes) {
   const indexXml = readOutputFile("sitemap-index.xml");
   if (!indexXml) {
@@ -362,6 +429,7 @@ if (routes.length === 0) {
 }
 
 checkHtmlDocuments(routes);
+checkStructuredData(routes);
 const sitemapRoutes = checkSitemap(routes);
 checkRobots();
 checkRss();

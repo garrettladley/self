@@ -6,13 +6,17 @@ import { AUTHOR } from "../consts";
 import { ANALYTICS_EVENTS } from "../analytics";
 import { withOutboundTracking } from "../utils/outbound-url";
 import { getSiteUrl } from "../utils/site-url";
+import { personId } from "../utils/structured-data";
 
 const site = getSiteUrl({ url: Astro.url, site: Astro.site });
+const projectListId = new URL("/projects#projects", site).href;
 ---
 
 <BaseLayout
-  title="Projects - Garrett Ladley"
-  description="Active projects by Garrett Ladley."
+  title={`Projects - ${AUTHOR}`}
+  description={`Active projects by ${AUTHOR}.`}
+  pageType="CollectionPage"
+  mainEntity={{ "@id": projectListId }}
 >
   <main class="doc flow">
     <PageHeader title="Projects" />
@@ -59,6 +63,7 @@ const site = getSiteUrl({ url: Astro.url, site: Astro.site });
     set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "ItemList",
+      "@id": projectListId,
       itemListElement: projects.map((project, index) => ({
         "@type": "ListItem",
         position: index + 1,
@@ -69,9 +74,7 @@ const site = getSiteUrl({ url: Astro.url, site: Astro.site });
           ...(project.href && { codeRepository: project.href }),
           programmingLanguage: project.tools,
           author: {
-            "@type": "Person",
-            name: AUTHOR,
-            url: site.origin,
+            "@id": personId(site),
           },
         },
       })),

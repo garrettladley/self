@@ -1,5 +1,6 @@
 import rss from "@astrojs/rss";
 import type { APIContext } from "astro";
+import { AUTHOR } from "../consts";
 import { getBlogPosts } from "../data/blog";
 import { getSiteUrl } from "../utils/site-url";
 
@@ -26,8 +27,8 @@ export async function GET(context: APIContext) {
     .join("");
 
   return rss({
-    title: "Garrett Ladley",
-    description: "Writing by Garrett Ladley.",
+    title: AUTHOR,
+    description: `Writing by ${AUTHOR}.`,
     site,
     trailingSlash: false,
     xmlns: {

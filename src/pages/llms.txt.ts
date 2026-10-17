@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { projects } from "../data/projects";
 import { library } from "../data/library";
 import { experience } from "../data/experience";
-import { SOCIAL_PROFILES } from "../consts";
+import { AUTHOR, SITE_DESCRIPTION, SOCIAL_PROFILES } from "../consts";
 import { getBlogPosts, type BlogPost } from "../data/blog";
 import { withOutboundTracking } from "../utils/outbound-url";
 import { getSiteUrl } from "../utils/site-url";
@@ -43,7 +43,7 @@ function generateLlmsTxt(posts: BlogPost[], site: URL): string {
       : "";
 
   const writingPageLine =
-    posts.length > 0 ? `- [Writing](${absoluteUrl("/blog")}): Writing by Garrett Ladley` : "";
+    posts.length > 0 ? `- [Writing](${absoluteUrl("/blog")}): Writing by ${AUTHOR}` : "";
 
   const pageLines = [
     `- [Home](${absoluteUrl("/")}): Overview with role, location, and focus areas`,
@@ -56,13 +56,13 @@ function generateLlmsTxt(posts: BlogPost[], site: URL): string {
     .filter(Boolean)
     .join("\n");
 
-  return `# Garrett Ladley
+  return `# ${AUTHOR}
 
-> Personal website of Garrett Ladley, Software Engineer at Klaviyo, based in Boston, MA.
+> Personal website of ${AUTHOR}.
 
 ## About
 
-Garrett Ladley is a software engineer specializing in Go and Rust. He currently works as a Software Engineer at Klaviyo. He is based in Boston, MA.
+${SITE_DESCRIPTION}
 
 ## Links
 

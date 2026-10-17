@@ -1,4 +1,6 @@
 ---
+import { AUTHOR } from "../consts";
+
 /**
  * The masthead shared by every page: the wordmark, then — on inner pages — the
  * page's own heading, then whatever supporting lines a page passes as children.
@@ -33,10 +35,10 @@ const titleClass = article
 <header class="mb-[2.4em]">
   {
     isHome ? (
-      <h1 class={wordmark}>Garrett Ladley</h1>
+      <h1 class={wordmark}>{AUTHOR}</h1>
     ) : (
       <a class:list={[wordmark, "no-underline hover:text-accent"]} href="/">
-        Garrett Ladley
+        {AUTHOR}
       </a>
     )
   }

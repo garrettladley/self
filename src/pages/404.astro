@@ -1,9 +1,10 @@
 ---
+import { AUTHOR } from "../consts";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHeader from "../components/PageHeader.astro";
 ---
 
-<BaseLayout title="404 - Garrett Ladley" description="Page not found" noIndex>
+<BaseLayout title={`404 - ${AUTHOR}`} description="Page not found" noIndex>
   <main class="doc flow">
     <PageHeader title="404" />
 
