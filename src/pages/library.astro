@@ -1,12 +1,14 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHeader from "../components/PageHeader.astro";
+import { AUTHOR } from "../consts";
 import { library } from "../data/library";
 ---
 
 <BaseLayout
-  title="Library - Garrett Ladley"
-  description="Books read by Garrett Ladley, grouped by year."
+  title={`Library - ${AUTHOR}`}
+  description={`Books read by ${AUTHOR}, grouped by year.`}
+  pageType="CollectionPage"
 >
   <main class="doc flow">
     <PageHeader title="Library" />

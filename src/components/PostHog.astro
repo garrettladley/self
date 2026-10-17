@@ -71,6 +71,11 @@ const apiHost = PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com";
       api_host: apiHost,
       defaults: "2026-01-30",
       capture_pageview: "history_change",
+      autocapture: true,
+      disable_surveys: true,
+      // Allow session replay to follow the project's recording settings.
+      disable_session_recording: false,
+      logs: { captureConsoleLogs: false },
     });
   }
 </script>

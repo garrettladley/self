@@ -6,6 +6,7 @@ import { formatDate } from "../utils/date";
 import { ANALYTICS_EVENTS } from "../analytics";
 import { getSiteUrl } from "../utils/site-url";
 import { canonicalUrl } from "../utils/url";
+import { personId } from "../utils/structured-data";
 
 interface Props {
   title: string;
@@ -66,9 +67,7 @@ const canonical = canonicalUrl(Astro.url.pathname, site);
       datePublished: pubDate.toISOString(),
       ...(updatedDate && { dateModified: updatedDate.toISOString() }),
       author: {
-        "@type": "Person",
-        name: AUTHOR,
-        url: site.origin,
+        "@id": personId(site),
       },
       keywords: tags,
     })}
