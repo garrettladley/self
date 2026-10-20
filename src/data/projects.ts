@@ -17,7 +17,7 @@ export const projects: Project[] = [
   {
     name: "skiplist",
     href: "https://github.com/garrettladley/skiplist",
-    description: "An implementation of skiplists in Go",
+    description: "An implementation of a skiplist",
     tools: ["Go"],
   },
   {
