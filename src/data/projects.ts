@@ -11,7 +11,7 @@ export const projects: Project[] = [
   {
     name: "ku",
     href: "https://github.com/garrettladley/ku",
-    description: "Sudoku TUI with replayable solver visualization",
+    description: "A Sudoku engine and TUI",
     tools: ["Rust"],
   },
   {
