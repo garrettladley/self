@@ -9,6 +9,12 @@ export type Project = {
 // ordered reverse chronologically
 export const projects: Project[] = [
   {
+    name: "ku",
+    href: "https://github.com/garrettladley/ku",
+    description: "A Sudoku engine and TUI",
+    tools: ["Rust"],
+  },
+  {
     name: "skiplist",
     href: "https://github.com/garrettladley/skiplist",
     description: "An implementation of skiplists in Go",
