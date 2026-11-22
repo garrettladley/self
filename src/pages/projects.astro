@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHeader from "../components/PageHeader.astro";
-import { projects } from "../data/projects";
+import { projectHref, projects } from "../data/projects";
 import { AUTHOR } from "../consts";
 import { ANALYTICS_EVENTS } from "../analytics";
 import { withOutboundTracking } from "../utils/outbound-url";
@@ -23,36 +23,37 @@ const projectListId = new URL("/projects#projects", site).href;
 
     <ul class="space-y-[0.9em]">
       {
-        projects.map((project) => (
-          <li>
-            {project.href ? (
-              <a
-                class="link"
-                href={withOutboundTracking(project.href, "projects", site)}
-                target="_blank"
-                rel="noreferrer"
-                data-analytics-event={ANALYTICS_EVENTS.projectLinkClicked}
-                data-analytics-project-name={project.name}
-              >
-                {project.name}
-              </a>
-            ) : (
-              <span>
-                {project.name}
-                {project.private && (
+        projects.map((project) => {
+          const href = projectHref(project);
+          return (
+            <li>
+              {href ? (
+                <a
+                  class="link"
+                  href={withOutboundTracking(href, "projects", site)}
+                  target="_blank"
+                  rel="noreferrer"
+                  data-analytics-event={ANALYTICS_EVENTS.projectLinkClicked}
+                  data-analytics-project-name={project.name}
+                >
+                  {project.name}
+                </a>
+              ) : (
+                <span>
+                  {project.name}
                   <span class="text-foreground-dim"> (private)</span>
-                )}
-              </span>
-            )}
-            <span class="text-foreground-soft"> — {project.description}</span>
-            {project.tools.length > 0 && (
-              <span class="text-foreground-dim">
-                {" "}
-                · {project.tools.join(", ")}
-              </span>
-            )}
-          </li>
-        ))
+                </span>
+              )}
+              <span class="text-foreground-soft"> — {project.description}</span>
+              {project.tools.length > 0 && (
+                <span class="text-foreground-dim">
+                  {" "}
+                  · {project.tools.join(", ")}
+                </span>
+              )}
+            </li>
+          );
+        })
       }
     </ul>
   </main>
@@ -71,7 +72,10 @@ const projectListId = new URL("/projects#projects", site).href;
           "@type": "SoftwareSourceCode",
           name: project.name,
           description: project.description,
-          ...(project.href && { codeRepository: project.href }),
+          ...(project.visibility === "open-source" && {
+            codeRepository: project.repo,
+          }),
+          ...(project.visibility === "closed-source" && { url: project.url }),
           programmingLanguage: project.tools,
           author: {
             "@id": personId(site),

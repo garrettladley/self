@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { projects } from "../data/projects";
+import { projectHref, projects } from "../data/projects";
 import { library } from "../data/library";
 import { experience } from "../data/experience";
 import { AUTHOR, SITE_DESCRIPTION, SOCIAL_PROFILES } from "../consts";
@@ -12,8 +12,9 @@ function generateLlmsTxt(posts: BlogPost[], site: URL): string {
 
   const projectLines = projects
     .map((p) => {
-      const prefix = p.href
-        ? `[${p.name}](${withOutboundTracking(p.href, "llms", site)})`
+      const href = projectHref(p);
+      const prefix = href
+        ? `[${p.name}](${withOutboundTracking(href, "llms", site)})`
         : `${p.name} (private)`;
       return `- ${prefix}: ${p.description} (${p.tools.join(", ")})`;
     })
