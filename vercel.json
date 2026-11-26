@@ -1,53 +1,42 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "trailingSlash": false,
-  "headers": [
+  "routes": [
     {
-      "source": "/health",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store"
-        },
-        {
-          "key": "Content-Type",
-          "value": "text/plain; charset=utf-8"
-        }
-      ]
+      "src": "^/(?:(?:.*/)?\\.(?!well-known(?:/|$))|wp-|wordpress|xmlrpc|cgi-bin|phpmyadmin|phpunit|vendor/|laravel/|yii/|_next/|__nextjs|_middleware|RSC/|api/|v\\d+/|rest/|functions/v\\d+|containers/|_watcher/|actuator|server-status|.*\\.(?:php\\d?|phtml|aspx?|jsp|cgi|env|sql|bak|ini)$)",
+      "mitigate": {
+        "action": "deny"
+      }
     },
     {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        },
-        {
-          "key": "Permissions-Policy",
-          "value": "camera=(), geolocation=(), microphone=(), payment=()"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        }
-      ]
-    }
-  ],
-  "redirects": [
-    {
-      "source": "/(.*)",
+      "src": "^/(.*)$",
       "has": [
         {
           "type": "host",
           "value": "www.garrettladley.com"
         }
       ],
-      "destination": "https://garrettladley.com/$1",
-      "permanent": true
+      "headers": {
+        "Location": "https://garrettladley.com/$1"
+      },
+      "status": 308
+    },
+    {
+      "src": "^/health$",
+      "headers": {
+        "Cache-Control": "no-store",
+        "Content-Type": "text/plain; charset=utf-8"
+      },
+      "continue": true
+    },
+    {
+      "src": "^/(.*)$",
+      "headers": {
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Permissions-Policy": "camera=(), geolocation=(), microphone=(), payment=()",
+        "X-Frame-Options": "DENY"
+      },
+      "continue": true
     }
   ]
 }
