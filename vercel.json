@@ -12,7 +12,7 @@
       "has": [
         {
           "type": "host",
-          "value": "www.garrettladley.com"
+          "value": "^(?:www\\.garrettladley\\.com|(?:www\\.)?garrett\\.(?:agency|zone))$"
         }
       ],
       "headers": {
