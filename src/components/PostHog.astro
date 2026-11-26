@@ -33,6 +33,7 @@ const apiHost = PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com";
           (((p = t.createElement("script")).type = "text/javascript"),
             (p.crossOrigin = "anonymous"),
             (p.async = !0),
+            (p.fetchPriority = "low"),
             (p.src = s.api_host + "/static/array.js"),
             (r = t.getElementsByTagName("script")[0]).parentNode.insertBefore(
               p,

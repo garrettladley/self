@@ -21,7 +21,7 @@ const projectListId = new URL("/projects#projects", site).href;
   <main class="doc flow">
     <PageHeader title="Projects" />
 
-    <ul class="space-y-[0.9em]">
+    <ul class="space-y-[0.9em]" role="list">
       {
         projects.map((project) => {
           const href = projectHref(project);

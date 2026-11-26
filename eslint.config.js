@@ -41,6 +41,14 @@ export default [
         parser: tseslint.parser,
       },
     },
+    rules: {
+      // Safari drops list semantics from styled lists (`list-style: none`,
+      // flex, grid) unless `role="list"` restores them.
+      "astro/jsx-a11y/no-redundant-roles": [
+        "error",
+        { nav: ["navigation"], ul: ["list"], ol: ["list"] },
+      ],
+    },
   },
   {
     files: JS_FILES,

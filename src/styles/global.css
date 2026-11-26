@@ -38,9 +38,12 @@
     background: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-mono);
-    font-size: 15px;
+    font-size: 0.9375rem;
     line-height: 1.65;
     font-weight: 400;
+    /* Scale fallback monospace faces to Lilex's advance width (0.6em) so lines
+       wrap identically before and after the web font swaps in. */
+    font-size-adjust: ch-width 0.6;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -106,6 +109,10 @@
   margin-top: 1.3em;
 }
 
+.prose :is(p, li, blockquote) {
+  text-wrap: pretty;
+}
+
 .prose h2,
 .prose h3 {
   color: var(--color-foreground);
@@ -114,6 +121,7 @@
   letter-spacing: -0.01em;
   font-size: 1rem;
   margin-top: 2.4em;
+  text-wrap: balance;
 }
 .prose h3 {
   font-size: 0.95rem;
@@ -143,20 +151,18 @@
 .prose ul,
 .prose ol {
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.35em;
+}
+/* Space items with margins rather than flex/gap, and keep a real list-style
+   marker: Safari drops list semantics from lists with `display: flex` or
+   `list-style: none`. */
+.prose li + li {
+  margin-top: 0.35em;
 }
 .prose ul {
-  list-style: none;
-  padding-left: 0;
-}
-.prose ul > li {
+  list-style: "– ";
   padding-left: 2ch;
-  text-indent: -2ch;
 }
-.prose ul > li::before {
-  content: "– ";
+.prose ul > li::marker {
   color: var(--color-foreground-dim);
 }
 .prose ol {

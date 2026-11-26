@@ -17,7 +17,7 @@ const { posts } = Astro.props;
   <main class="doc flow">
     <PageHeader title="Writing" />
 
-    <ul class="flex flex-col gap-[1.1em]">
+    <ul class="flex flex-col gap-[1.1em]" role="list">
       {
         posts.map((post) => (
           <li>

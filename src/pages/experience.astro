@@ -18,7 +18,7 @@ const site = getSiteUrl({ url: Astro.url, site: Astro.site });
   <main class="doc flow">
     <PageHeader title="Experience" />
 
-    <ol class="space-y-[2.4em]">
+    <ol class="space-y-[2.4em]" role="list">
       {
         experience.map((entry) => (
           <li>
