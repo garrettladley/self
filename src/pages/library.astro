@@ -26,8 +26,8 @@ import { library } from "../data/library";
               i > 0 && "mt-[1.9em] border-t border-border pt-[1.9em]",
             ]}
           >
-            <p class="text-foreground">{yearGroup.year}</p>
-            <ul class="flex flex-col gap-[0.2em]">
+            <h2 class="text-foreground">{yearGroup.year}</h2>
+            <ul class="flex flex-col gap-[0.2em]" role="list">
               {yearGroup.books.map((book) => (
                 <li class="text-foreground-soft">{book.title}</li>
               ))}

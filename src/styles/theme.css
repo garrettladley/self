@@ -23,7 +23,7 @@
   --container-doc: 42rem;
 
   /* Recurring small type sizes (utilities: text-meta / text-wordmark). */
-  --text-meta: 13px;
+  --text-meta: 0.8125rem;
   --text-wordmark: 1.0625rem;
 }
 
