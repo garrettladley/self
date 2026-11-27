@@ -12,11 +12,37 @@
       "has": [
         {
           "type": "host",
-          "value": "^(?:www\\.garrettladley\\.com|(?:www\\.)?garrett\\.(?:agency|zone))$"
+          "value": "^www\\.garrettladley\\.com$"
         }
       ],
       "headers": {
         "Location": "https://garrettladley.com/$1"
+      },
+      "status": 308
+    },
+    {
+      "src": "^/(.*)$",
+      "has": [
+        {
+          "type": "host",
+          "value": "^(?:www\\.)?garrett\\.agency$"
+        }
+      ],
+      "headers": {
+        "Location": "https://garrettladley.com/$1?utm_source=garrett.agency&utm_medium=alias"
+      },
+      "status": 308
+    },
+    {
+      "src": "^/(.*)$",
+      "has": [
+        {
+          "type": "host",
+          "value": "^(?:www\\.)?garrett\\.zone$"
+        }
+      ],
+      "headers": {
+        "Location": "https://garrettladley.com/$1?utm_source=garrett.zone&utm_medium=alias"
       },
       "status": 308
     },
