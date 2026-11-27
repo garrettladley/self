@@ -16,6 +16,27 @@ const apiHost = PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com";
 >
   if (!window.__posthog_initialized) {
     window.__posthog_initialized = true;
+
+    // Alias domains redirect here with UTM params (see vercel.json). Strip them
+    // before PostHog patches history, then attach them to the first pageview so
+    // the tagged URL is never shared.
+    let aliasParams = null;
+    const params = new URLSearchParams(location.search);
+    if (params.get("utm_medium") === "alias") {
+      aliasParams = {
+        utm_source: params.get("utm_source"),
+        utm_medium: "alias",
+      };
+      params.delete("utm_source");
+      params.delete("utm_medium");
+      const search = params.toString();
+      history.replaceState(
+        history.state,
+        "",
+        location.pathname + (search ? "?" + search : "") + location.hash,
+      );
+    }
+
     /* eslint-disable */
     !(function (t, e) {
       var o, n, p, r;
@@ -77,6 +98,13 @@ const apiHost = PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com";
       // Allow session replay to follow the project's recording settings.
       disable_session_recording: false,
       logs: { captureConsoleLogs: false },
+      before_send: function (event) {
+        if (aliasParams && event && event.event === "$pageview") {
+          event.properties = Object.assign(event.properties || {}, aliasParams);
+          aliasParams = null;
+        }
+        return event;
+      },
     });
   }
 </script>
